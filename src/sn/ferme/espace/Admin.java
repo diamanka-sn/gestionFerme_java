@@ -11,6 +11,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
@@ -19,6 +20,8 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 import sn.ferme.espace.admin.Bovin;
 import sn.ferme.espace.admin.Employe;
 import sn.ferme.espace.admin.Production;
+import sn.ferme.main.Main;
+import sn.ferme.model.Utilisateur;
 
 public class Admin extends javax.swing.JFrame {
 
@@ -28,8 +31,10 @@ public class Admin extends javax.swing.JFrame {
     private Animator animator;
     private boolean menuShow;
 
-    public Admin() {
+    public Admin(Utilisateur user) {
         initComponents();
+        menu.bottom.setLabelNom(user.getPrenom());
+        menu.bottom.setProfile(user.getProfile());
         init();
     }
 
@@ -41,7 +46,11 @@ public class Admin extends javax.swing.JFrame {
         menu.addEventLogout(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                System.out.println("Logout");
+                int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if(confirme ==0){
+                    logout();
+                }
+                
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -110,6 +119,11 @@ public class Admin extends javax.swing.JFrame {
         main.revalidate();
     }
 
+    private void logout() {
+        this.dispose();
+        new Main().setVisible(true);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -146,7 +160,13 @@ public class Admin extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-
+    public static void main(Utilisateur user) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Admin(user).setVisible(true);
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;
     // End of variables declaration//GEN-END:variables

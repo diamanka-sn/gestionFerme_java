@@ -19,6 +19,7 @@ import sn.ferme.espace.fermier.Alimentation;
 import sn.ferme.espace.fermier.BovinF;
 import sn.ferme.espace.fermier.Passe;
 import sn.ferme.espace.fermier.ProductionF;
+import sn.ferme.model.Utilisateur;
 
 public class Client extends javax.swing.JFrame {
 
@@ -28,8 +29,10 @@ public class Client extends javax.swing.JFrame {
     private Animator animator;
     private boolean menuShow;
 
-    public Client() {
+    public Client(Utilisateur user) {
         initComponents();
+        menu.bottom.setLabelNom(user.getNom());
+        menu.bottom.setProfile(user.getProfile());
         init();
     }
 
@@ -41,7 +44,7 @@ public class Client extends javax.swing.JFrame {
         menu.addEventLogout(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-               new Client().setVisible(false);
+              // new Client().setVisible(false);
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -69,8 +72,8 @@ public class Client extends javax.swing.JFrame {
             }
         });
         menu.addMenu(new ModelMenu("Accueil", new ImageIcon(getClass().getResource("/sn/ferme/icon/tb.png"))));
-        menu.addMenu(new ModelMenu("Alimentation", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
-        menu.addMenu(new ModelMenu("Production", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
+        menu.addMenu(new ModelMenu("Acheter", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
+        menu.addMenu(new ModelMenu("Panier", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
         menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
         menu.addMenu(new ModelMenu("Mot de passe", new ImageIcon(getClass().getResource("/sn/ferme/icon/key.png"))));
         //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -146,7 +149,13 @@ public class Client extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-
+public static void main(Utilisateur user) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Client(user).setVisible(true);
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;
     // End of variables declaration//GEN-END:variables

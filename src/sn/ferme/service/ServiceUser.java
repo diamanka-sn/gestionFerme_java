@@ -100,17 +100,17 @@ public class ServiceUser {
         return duplicate;
     }
 
-    public boolean checkDuplicateEmail(String user) throws SQLException {
-        boolean duplicate = false;
-        PreparedStatement p = con.prepareStatement("select UserID from `user` where Email=? and `Status`='Verified' limit 1");
-        p.setString(1, user);
+    public boolean VerifierDuplicationEmail(String email) throws SQLException {
+        boolean doublon = false;
+        PreparedStatement p = con.prepareStatement("select idUtilisateur from utilisateur where email=? limit 1");
+        p.setString(1, email);
         ResultSet r = p.executeQuery();
         if (r.first()) {
-            duplicate = true;
+            doublon = true;
         }
         r.close();
         p.close();
-        return duplicate;
+        return doublon;
     }
 
     public void doneVerify(int userID) throws SQLException {

@@ -4,7 +4,6 @@ import sn.ferme.login.composant.Message;
 import sn.ferme.login.composant.PanelCover;
 import sn.ferme.login.composant.PanelLoading;
 import sn.ferme.login.composant.PanelLoginAndRegister;
-import sn.ferme.login.composant.PanelVerifyCode;
 import sn.ferme.connexionDb.DatabaseConnection;
 import sn.ferme.model.ModelLogin;
 import sn.ferme.model.ModelUser;
@@ -20,6 +19,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import sn.ferme.espace.Admin;
+import sn.ferme.espace.Client;
 import sn.ferme.model.Utilisateur;
 import sn.ferme.service.ValiderChamp;
 
@@ -29,7 +30,6 @@ public class Main extends javax.swing.JFrame {
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoading loading;
-    private PanelVerifyCode verifyCode;
     private PanelLoginAndRegister loginAndRegister;
     private boolean isLogin;
     private final double addSize = 30;
@@ -47,7 +47,6 @@ public class Main extends javax.swing.JFrame {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
-        verifyCode = new PanelVerifyCode();
         ActionListener eventRegister = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -110,9 +109,7 @@ public class Main extends javax.swing.JFrame {
         animator.setResolution(0);  //  for smooth animation
         bg.setLayout(layout);
         bg.setLayer(loading, JLayeredPane.POPUP_LAYER);
-        bg.setLayer(verifyCode, JLayeredPane.POPUP_LAYER);
         bg.add(loading, "pos 0 0 100% 100%");
-        bg.add(verifyCode, "pos 0 0 100% 100%");
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
         bg.add(loginAndRegister, "width " + loginSize + "%, pos 1al 0 n 100%"); //  1al as 100%
         cover.addEvent(new ActionListener() {
@@ -123,23 +120,6 @@ public class Main extends javax.swing.JFrame {
                 }
             }
         });
-        /* verifyCode.addEventButtonOK(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                try {
-                    Utilisateur user = loginAndRegister.getUser();
-                    if (service.verifyCodeWithUser(user.getUserID(), verifyCode.getInputCode())) {
-                        service.doneVerify(user.getUserID());
-                        showMessage(Message.MessageType.SUCCESS, "Register sucess");
-                        verifyCode.setVisible(false);
-                    } else {
-                        showMessage(Message.MessageType.ERROR, "Verify code incorrect");
-                    }
-                } catch (SQLException e) {
-                    showMessage(Message.MessageType.ERROR, "Error");
-                }
-            }
-        });*/
     }
 
     private void register() {
@@ -148,15 +128,18 @@ public class Main extends javax.swing.JFrame {
         try {
             if (!v.validerMail(user.getEmail())) {
                 showMessage(Message.MessageType.ERROR, "Email invalide");
-            } 
-            else {
+            } else if (service.VerifierDuplicationEmail(user.getEmail())) {
+                showMessage(Message.MessageType.ERROR, "Adresse email existe déja!!");
+            } else {
                 service.insertUser(user);
+                this.dispose();
+                Client.main(user);
             }
 
             //sendMain(user);
         } catch (SQLException e) {
-           // showMessage(Message.MessageType.ERROR, "Utilisateur existe déja!!");
-           System.out.println(e.getMessage());
+            // showMessage(Message.MessageType.ERROR, "Utilisateur existe déja!!");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -165,11 +148,12 @@ public class Main extends javax.swing.JFrame {
         try {
             Utilisateur user = service.login(data);
             if (user != null) {
-                if("client".equals(user.getProfile())){
-                     showMessage(Message.MessageType.SUCCESS, "Client Connecter");
-                } else if(user.isIsAdmin()){
-                    showMessage(Message.MessageType.SUCCESS, "Admin connectée");
-                } else if("fermier".equals(user.getProfile())){
+                if ("client".equals(user.getProfile())) {
+                    showMessage(Message.MessageType.SUCCESS, "Client Connecter");
+                } else if (user.isIsAdmin()) {
+                    this.dispose();
+                    Admin.main(user);
+                } else if ("fermier".equals(user.getProfile())) {
                     showMessage(Message.MessageType.SUCCESS, "Fermier connectée");
                 }
             } else {
@@ -313,4 +297,5 @@ public class Main extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane bg;
     // End of variables declaration//GEN-END:variables
+
 }

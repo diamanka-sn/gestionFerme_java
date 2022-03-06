@@ -28,7 +28,7 @@ public class Menu extends javax.swing.JPanel {
     private JButton cmdMenu;
     private JButton cmdLogOut;
     private Header header;
-    private Bottom bottom;
+    public Bottom bottom;
     private EventMenuSelected event;
 
     public Menu() {
@@ -52,8 +52,6 @@ public class Menu extends javax.swing.JPanel {
         add(header);
         add(panelMenu);
         add(bottom);
-        bottom.setLabelNom("Mouhamed");
-        bottom.setProfile("Admin");
     }
 
     public void addMenu(ModelMenu menu) {

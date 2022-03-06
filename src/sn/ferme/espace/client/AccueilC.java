@@ -1,13 +1,14 @@
-package sn.ferme.espace.fermier;
+package sn.ferme.espace.client;
 
+import sn.ferme.espace.fermier.*;
 import sn.ferme.espace.admin.*;
 import sn.ferme.chart.ModelChart;
 import java.awt.Color;
 import javax.swing.table.DefaultTableModel;
 
-public class AccueilF extends javax.swing.JPanel {
+public class AccueilC extends javax.swing.JPanel {
 
-    public AccueilF() {
+    public AccueilC() {
         initComponents();
         setOpaque(false);
         init();

@@ -17,7 +17,7 @@ public class ValiderChamp {
     private Matcher matcher;
 
     private static final String EMAIL_MODELE = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
-    private static final String NOM_MODELE = "#^([a-z]+(( |')[a-z]+)*)+([-]([a-z]+(( |')[a-z]+)*)+)*$#iu";
+    private static final String NOM_MODELE = "#^([a-z]){3,20}";
     private static final String PASSWORD_MODELE = "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\\\S+$).{8,}";
 
     public boolean validerMail(final String mail) {
