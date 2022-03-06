@@ -18,26 +18,24 @@ public class Utilisateur {
     private String profile;
     private boolean isAdmin;
 
-    public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String photo, String email, String password, String profile, boolean isAdmin) {
+    public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String email, String password, String profile, boolean isAdmin) {
         this.idUtilisateur = idUtilisateur;
         this.nom = nom;
         this.prenom = prenom;
         this.telephone = telephone;
         this.adresse = adresse;
-        this.photo = photo;
         this.email = email;
         this.password = password;
         this.profile = profile;
         this.isAdmin = isAdmin;
     }
 
-    public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String photo, String email, String profile, boolean isAdmin) {
+    public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String email, String profile, boolean isAdmin) {
         this.idUtilisateur = idUtilisateur;
         this.nom = nom;
         this.prenom = prenom;
         this.telephone = telephone;
         this.adresse = adresse;
-        this.photo = photo;
         this.email = email;
         this.profile = profile;
         this.isAdmin = isAdmin;
@@ -46,6 +44,8 @@ public class Utilisateur {
 
     public Utilisateur() {
     }
+
+   
 
     public int getIdUtilisateur() {
         return idUtilisateur;
