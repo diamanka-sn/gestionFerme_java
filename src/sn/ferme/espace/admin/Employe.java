@@ -107,7 +107,6 @@ public class Employe extends javax.swing.JPanel {
         jLabel2.setText("Liste fermier");
         jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
-        jScrollPane1.setBackground(new java.awt.Color(245, 245, 245));
         jScrollPane1.setBorder(null);
 
         table.setModel(new javax.swing.table.DefaultTableModel(
