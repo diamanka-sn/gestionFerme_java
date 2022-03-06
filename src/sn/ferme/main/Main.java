@@ -6,7 +6,6 @@ import sn.ferme.login.composant.PanelLoading;
 import sn.ferme.login.composant.PanelLoginAndRegister;
 import sn.ferme.connexionDb.DatabaseConnection;
 import sn.ferme.model.ModelLogin;
-import sn.ferme.model.ModelUser;
 import sn.ferme.service.ServiceUser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -130,7 +129,12 @@ public class Main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR, "Email invalide");
             } else if (service.VerifierDuplicationEmail(user.getEmail())) {
                 showMessage(Message.MessageType.ERROR, "Adresse email existe déja!!");
-            } else {
+            } else if(!v.verifNom(user.getNom())){
+                showMessage(Message.MessageType.ERROR, "Le nom est invalide");
+            } else if(!v.validerMotPasse(user.getPassword())){
+                showMessage(Message.MessageType.ERROR, "Mot de passe invalide");
+            }
+            else {
                 service.insertUser(user);
                 this.dispose();
                 Client.main(user);
@@ -153,8 +157,10 @@ public class Main extends javax.swing.JFrame {
                 } else if (user.isIsAdmin()) {
                     this.dispose();
                     Admin.main(user);
-                } else if ("fermier".equals(user.getProfile())) {
+                } else if ("fermier".equals(user.getProfile()) && user.isIsAdmin()) {
                     showMessage(Message.MessageType.SUCCESS, "Fermier connectée");
+                } else{
+                    showMessage(Message.MessageType.ERROR, "Désoler vous etes en congé");
                 }
             } else {
                 showMessage(Message.MessageType.ERROR, "Email ou Mot de passe incorrect");

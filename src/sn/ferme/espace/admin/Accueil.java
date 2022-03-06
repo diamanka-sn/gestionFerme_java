@@ -92,7 +92,7 @@ public class Accueil extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 20)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(79, 79, 79));
-        jLabel2.setText("Liste fermier");
+        jLabel2.setText("Liste client");
         jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
         scrollBar1.setBackground(new java.awt.Color(245, 245, 245));
