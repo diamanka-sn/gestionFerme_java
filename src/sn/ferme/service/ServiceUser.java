@@ -2,18 +2,19 @@ package sn.ferme.service;
 
 import sn.ferme.connexionDb.DatabaseConnection;
 import sn.ferme.model.ModelLogin;
-import sn.ferme.model.ModelUser;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Random;
 import sn.ferme.model.Utilisateur;
 
 public class ServiceUser {
 
     private final Connection con;
+    ArrayList<Utilisateur> listeEmploye = new ArrayList<Utilisateur>();
 
     public ServiceUser() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -53,15 +54,13 @@ public class ServiceUser {
         p.setString(7, user.getPassword());
         p.setString(8, user.getProfile());
         p.setBoolean(9, user.isIsAdmin());
-        
+
         p.execute();
         ResultSet r = p.getGeneratedKeys();
         r.first();
-      //  int userID = r.getInt(1);
+        //  int userID = r.getInt(1);
         r.close();
         p.close();
-        //  user.setUserID(userID);
-        // user.setVerifyCode(code);
     }
 
     private int genererIdentifiant() throws SQLException {
@@ -132,5 +131,58 @@ public class ServiceUser {
         r.close();
         p.close();
         return verify;
+    }
+
+    public int insererEmploye(String nom, String prenom, String telephone, String adresse, String email, String password, String profile, boolean isAdmin) throws SQLException {
+        PreparedStatement p = con.prepareStatement("insert into utilisateur(idUtilisateur, nom, prenom, telephone, adresse, email, password, profile,isAdmin) values (?,?,?,?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        int id = genererIdentifiant();
+        p.setInt(1, id);
+        p.setString(2, nom);
+        p.setString(3, prenom);
+        p.setString(4, telephone);
+        p.setString(5, adresse);
+        p.setString(6, email);
+        p.setString(7, password);
+        p.setString(8, profile);
+        p.setBoolean(9, isAdmin);
+        int status = p.executeUpdate();
+
+        return status;
+    }
+
+    public int ligne() throws SQLException {
+        int nb = 0;
+        PreparedStatement p = con.prepareStatement("Select * from Utilisateur");
+        ResultSet r = p.executeQuery();
+        if (r.last()) {
+            nb = r.getRow();
+        }
+
+        return nb;
+    }
+
+    public ArrayList<Utilisateur> afficher() {
+        String select = "SELECT * FROM utilisateur";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur employe = new Utilisateur();
+                employe.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                employe.setNom(rs.getString("nom"));
+                employe.setPrenom(rs.getString("prenom"));
+                employe.setEmail(rs.getString("email"));
+                employe.setTelephone(rs.getString("telephone"));
+                employe.setAdresse(rs.getString("adresse"));
+                employe.setProfile(rs.getString("profile"));
+                employe.setIsAdmin(rs.getBoolean("isAdmin"));
+                listeEmploye.add(employe);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return listeEmploye;
     }
 }

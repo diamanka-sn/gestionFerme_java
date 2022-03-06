@@ -1,4 +1,3 @@
-
 package sn.ferme.model;
 
 /**
@@ -6,7 +5,7 @@ package sn.ferme.model;
  * @author hp
  */
 public class Utilisateur {
-    
+
     private int idUtilisateur;
     private String nom;
     private String prenom;
@@ -40,12 +39,9 @@ public class Utilisateur {
         this.profile = profile;
         this.isAdmin = isAdmin;
     }
-    
 
     public Utilisateur() {
     }
-
-   
 
     public int getIdUtilisateur() {
         return idUtilisateur;
@@ -118,5 +114,13 @@ public class Utilisateur {
     public void setIdUtilisateur(int idUtilisateur) {
         this.idUtilisateur = idUtilisateur;
     }
-    
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+
 }
