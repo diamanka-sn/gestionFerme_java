@@ -233,7 +233,6 @@ public class Employe extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-
         inscrireEmploye();        // TODO add your handling code here:
     }//GEN-LAST:event_button1ActionPerformed
 
