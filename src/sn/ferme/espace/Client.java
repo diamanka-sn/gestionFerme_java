@@ -62,12 +62,10 @@ public class Client extends javax.swing.JFrame {
                     showForm(new AccueilF());
                 } else if (index == 1) {
                     showForm(new Alimentation());
-                } else if (index == 2) {
-                    showForm(new ProductionF());
                 } else if (index == 3) {
                     showForm(new BovinF());
                 } else {
-                    showForm(new Passe());
+                  //  showForm(new Passe());
                 }
             }
         });

@@ -2,14 +2,22 @@ package sn.ferme.espace.admin;
 
 import sn.ferme.chart.ModelChart;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import sn.ferme.model.Utilisateur;
+import sn.ferme.service.ServiceUser;
 
 public class Accueil extends javax.swing.JPanel {
+
+    private ServiceUser service = new ServiceUser();
 
     public Accueil() {
         initComponents();
         setOpaque(false);
         init();
+        data();
     }
 
     private void init() {
@@ -23,10 +31,25 @@ public class Accueil extends javax.swing.JPanel {
         chart.addData(new ModelChart("Avril", new double[]{480, 150, 50, 700}));
         chart.addData(new ModelChart("Mai", new double[]{350, 540, 300, 150}));
         chart.addData(new ModelChart("Juin", new double[]{190, 500, 70, 1000}));
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{1, "Jonh china", "Masculin", "Jonh00001@gmail.com", "+789 966 666 333"});
-        model.addRow(new Object[]{2, "Jonh china", "Masculin", "Jonh00001@gmail.com", "+789 966 666 333"});
-     
+
+    }
+
+    private void data() {
+
+        Object body[][] = new Object[service.afficherClient().size()][5];
+        String[] header = {"id", "Nom complet", "Telephone", "Adresse", "Email"};
+        int i = 0;
+        for (Utilisateur m : new ServiceUser().afficherClient()) {
+            body[i][0] = m.getIdUtilisateur();
+            body[i][1] = m.getPrenom() + " " + m.getNom();
+            body[i][2] = m.getTelephone();
+            body[i][3] = m.getAdresse();
+            body[i][4] = m.getEmail();          
+            i++;
+        }
+        //DefaultTableModel model = (DefaultTableModel) table.getModel();
+        //model.addRow(body);
+        table.setModel(new DefaultTableModel(body, header));
     }
 
     @SuppressWarnings("unchecked")
@@ -74,17 +97,9 @@ public class Accueil extends javax.swing.JPanel {
 
             },
             new String [] {
-                "id", "Nom complet", "Sexe", "Email", "Numero", "Action"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                true, true, true, true, true, false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         jScrollPane1.setViewportView(table);
         if (table.getColumnModel().getColumnCount() > 0) {
             table.getColumnModel().getColumn(0).setPreferredWidth(50);

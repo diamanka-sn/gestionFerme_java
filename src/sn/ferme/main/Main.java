@@ -1,5 +1,7 @@
 package sn.ferme.main;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import sn.ferme.login.composant.Message;
 import sn.ferme.login.composant.PanelCover;
 import sn.ferme.login.composant.PanelLoading;
@@ -20,6 +22,7 @@ import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import sn.ferme.espace.Admin;
 import sn.ferme.espace.Client;
+import sn.ferme.espace.Fermier;
 import sn.ferme.model.Utilisateur;
 import sn.ferme.service.ValiderChamp;
 
@@ -129,17 +132,15 @@ public class Main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR, "Email invalide");
             } else if (service.VerifierDuplicationEmail(user.getEmail())) {
                 showMessage(Message.MessageType.ERROR, "Adresse email existe déja!!");
-            } else if(!v.verifNom(user.getNom())){
+            } else if (!v.verifNom(user.getNom())) {
                 showMessage(Message.MessageType.ERROR, "Le nom est invalide");
-            } else if(!v.validerMotPasse(user.getPassword())){
+            } else if (!v.validerMotPasse(user.getPassword())) {
                 showMessage(Message.MessageType.ERROR, "Mot de passe invalide");
-            }
-            else {
+            } else {
                 service.insertUser(user);
                 this.dispose();
                 Client.main(user);
             }
-
             //sendMain(user);
         } catch (SQLException e) {
             // showMessage(Message.MessageType.ERROR, "Utilisateur existe déja!!");
@@ -149,21 +150,26 @@ public class Main extends javax.swing.JFrame {
 
     private void login() {
         ModelLogin data = loginAndRegister.getDataLogin();
+        loading.setVisible(true);
         try {
             Utilisateur user = service.login(data);
             if (user != null) {
                 if ("client".equals(user.getProfile())) {
                     showMessage(Message.MessageType.SUCCESS, "Client Connecter");
-                } else if (user.isIsAdmin()) {
+                } else if ("admin".equals(user.getProfile()) && user.isIsAdmin()) {
+                    loading.setVisible(false);
                     this.dispose();
                     Admin.main(user);
                 } else if ("fermier".equals(user.getProfile()) && user.isIsAdmin()) {
-                    showMessage(Message.MessageType.SUCCESS, "Fermier connectée");
-                } else{
+                    loading.setVisible(false);
+                    this.dispose();
+                    Fermier.main(user);
+                } else {
                     showMessage(Message.MessageType.ERROR, "Désoler vous etes en congé");
                 }
             } else {
                 showMessage(Message.MessageType.ERROR, "Email ou Mot de passe incorrect");
+                loading.setVisible(false);
             }
 
         } catch (SQLException e) {
@@ -233,6 +239,7 @@ public class Main extends javax.swing.JFrame {
         bg = new javax.swing.JLayeredPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         bg.setBackground(new java.awt.Color(255, 255, 255));
         bg.setOpaque(true);
@@ -295,7 +302,14 @@ public class Main extends javax.swing.JFrame {
         }
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Main().setVisible(true);
+                Main main = new Main();
+                Image ic = Toolkit.getDefaultToolkit()
+                        .getImage(getClass().getResource("/sn/ferme/icon/icons8_cow_breed_100px_4.png"));
+                main.setIconImage(ic);
+                main.setResizable(false);
+                main.setTitle("AUTHENTIFICATION");
+                main.setVisible(true);
+                // new Main().setVisible(true);
             }
         });
     }

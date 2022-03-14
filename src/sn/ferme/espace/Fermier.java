@@ -5,10 +5,13 @@ import sn.ferme.event.EventMenuSelected;
 import sn.ferme.model.ModelMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
@@ -19,21 +22,28 @@ import sn.ferme.espace.fermier.Alimentation;
 import sn.ferme.espace.fermier.BovinF;
 import sn.ferme.espace.fermier.Passe;
 import sn.ferme.espace.fermier.ProductionF;
+import sn.ferme.main.Main;
+import sn.ferme.model.Utilisateur;
 
 public class Fermier extends javax.swing.JFrame {
 
+   
     private Menu menu = new Menu();
     private JPanel main = new JPanel();
     private MigLayout layout;
     private Animator animator;
     private boolean menuShow;
 
-    public Fermier() {
+    public Fermier(Utilisateur user) {
         initComponents();
-        init();
+        init(user);
+        menu.bottom.setProfile(user.getProfile());
+        menu.bottom.setLabelNom(user.getPrenom() + " "+user.getNom());
     }
 
-    private void init() {
+   
+
+    private void init(Utilisateur user) {
         layout = new MigLayout("fill", "0[]10[]5", "0[fill]0");
         body.setLayout(layout);
         main.setOpaque(false);
@@ -41,7 +51,10 @@ public class Fermier extends javax.swing.JFrame {
         menu.addEventLogout(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-               new Fermier().setVisible(false);
+              int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if(confirme ==0){
+                    logout();
+                }
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -60,11 +73,11 @@ public class Fermier extends javax.swing.JFrame {
                 } else if (index == 1) {
                     showForm(new Alimentation());
                 } else if (index == 2) {
-                    showForm(new ProductionF());
+                    showForm(new ProductionF(user));
                 } else if (index == 3) {
                     showForm(new BovinF());
                 } else {
-                    showForm(new Passe());
+                    showForm(new Passe(user));
                 }
             }
         });
@@ -72,7 +85,7 @@ public class Fermier extends javax.swing.JFrame {
         menu.addMenu(new ModelMenu("Alimentation", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
         menu.addMenu(new ModelMenu("Production", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
         menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
-        menu.addMenu(new ModelMenu("Mot de passe", new ImageIcon(getClass().getResource("/sn/ferme/icon/key.png"))));
+        menu.addMenu(new ModelMenu("Informations personnelles", new ImageIcon(getClass().getResource("/sn/ferme/icon/information.png"))));
         //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");
         body.add(main, "w 100%");
@@ -109,7 +122,10 @@ public class Fermier extends javax.swing.JFrame {
         main.repaint();
         main.revalidate();
     }
-
+    private void logout() {
+        this.dispose();
+        new Main().setVisible(true);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -145,7 +161,19 @@ public class Fermier extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+ public static void main(Utilisateur user) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                Fermier main = new Fermier(user);
+                Image ic = Toolkit.getDefaultToolkit()
+                        .getImage(getClass().getResource("/sn/ferme/icon/icons8_cow_breed_100px_4.png"));
+                main.setIconImage(ic);
+                main.setTitle("Espace Fermier");
+                main.setVisible(true);
+              //  new Admin(user).setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel body;

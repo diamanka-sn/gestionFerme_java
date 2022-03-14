@@ -1,5 +1,8 @@
 package sn.ferme.model;
 
+import java.text.DecimalFormat;
+import sn.ferme.event.ActionEvenenement;
+
 /**
  *
  * @author hp
@@ -122,5 +125,8 @@ public class Utilisateur {
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-
+  public Object[] toRowTable(ActionEvenenement event) {
+        DecimalFormat df = new DecimalFormat("$#,##0.00");
+        return new Object[]{new Utilisateur(idUtilisateur,nom, prenom, telephone, adresse, email, profile, isAdmin), new ModelAction(this, event)};
+    }
 }

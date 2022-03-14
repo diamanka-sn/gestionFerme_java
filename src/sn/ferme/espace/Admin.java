@@ -8,6 +8,8 @@ import sn.ferme.model.ModelMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -33,12 +35,12 @@ public class Admin extends javax.swing.JFrame {
 
     public Admin(Utilisateur user) {
         initComponents();
-        menu.bottom.setLabelNom(user.getPrenom());
-        menu.bottom.setProfile(user.getProfile());
-        init();
+        menu.bottom.setLabelNom(user.getPrenom() + " " + user.getNom().toUpperCase());
+        menu.bottom.setProfile(user.getProfile().toUpperCase());
+        init(user);
     }
 
-    private void init() {
+    private void init(Utilisateur user) {
         layout = new MigLayout("fill", "0[]10[]5", "0[fill]0");
         body.setLayout(layout);
         main.setOpaque(false);
@@ -47,10 +49,10 @@ public class Admin extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if(confirme ==0){
+                if (confirme == 0) {
                     logout();
                 }
-                
+
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -73,7 +75,7 @@ public class Admin extends javax.swing.JFrame {
                 } else if (index == 3) {
                     showForm(new Employe());
                 } else {
-                    showForm(new Bovin());
+                    showForm(new Bovin(user));
                 }
             }
         });
@@ -82,6 +84,8 @@ public class Admin extends javax.swing.JFrame {
         menu.addMenu(new ModelMenu("Production", new ImageIcon(getClass().getResource("/sn/ferme/icon/v.png"))));
         menu.addMenu(new ModelMenu("Employé", new ImageIcon(getClass().getResource("/sn/ferme/icon/em.png"))));
         menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
+        menu.addMenu(new ModelMenu("Statistique", new ImageIcon(getClass().getResource("/sn/ferme/icon/t.png"))));
+
         //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");
         body.add(main, "w 100%");
@@ -163,7 +167,13 @@ public class Admin extends javax.swing.JFrame {
     public static void main(Utilisateur user) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Admin(user).setVisible(true);
+                Admin main = new Admin(user);
+                Image ic = Toolkit.getDefaultToolkit()
+                        .getImage(getClass().getResource("/sn/ferme/icon/icons8_cow_breed_100px_4.png"));
+                main.setIconImage(ic);
+                main.setTitle("Espace administration");
+                main.setVisible(true);
+                //  new Admin(user).setVisible(true);
             }
         });
     }

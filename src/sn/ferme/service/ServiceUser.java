@@ -15,6 +15,7 @@ public class ServiceUser {
 
     private final Connection con;
     ArrayList<Utilisateur> listeEmploye = new ArrayList<Utilisateur>();
+    ArrayList<Utilisateur> listeClient = new ArrayList<Utilisateur>();
 
     public ServiceUser() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -86,19 +87,6 @@ public class ServiceUser {
         return doublon;
     }
 
-    public boolean checkDuplicateUser(String user) throws SQLException {
-        boolean duplicate = false;
-        PreparedStatement p = con.prepareStatement("select UserID from `user` where UserName=? and `Status`='Verified' limit 1");
-        p.setString(1, user);
-        ResultSet r = p.executeQuery();
-        if (r.first()) {
-            duplicate = true;
-        }
-        r.close();
-        p.close();
-        return duplicate;
-    }
-
     public boolean VerifierDuplicationEmail(String email) throws SQLException {
         boolean doublon = false;
         PreparedStatement p = con.prepareStatement("select idUtilisateur from utilisateur where email=? limit 1");
@@ -110,27 +98,6 @@ public class ServiceUser {
         r.close();
         p.close();
         return doublon;
-    }
-
-    public void doneVerify(int userID) throws SQLException {
-        PreparedStatement p = con.prepareStatement("update `user` set VerifyCode='', `Status`='Verified' where UserID=? limit 1");
-        p.setInt(1, userID);
-        p.execute();
-        p.close();
-    }
-
-    public boolean verifyCodeWithUser(int userID, String code) throws SQLException {
-        boolean verify = false;
-        PreparedStatement p = con.prepareStatement("select UserID from `user` where UserID=? and VerifyCode=? limit 1");
-        p.setInt(1, userID);
-        p.setString(2, code);
-        ResultSet r = p.executeQuery();
-        if (r.first()) {
-            verify = true;
-        }
-        r.close();
-        p.close();
-        return verify;
     }
 
     public int insererEmploye(String nom, String prenom, String telephone, String adresse, String email, String password, String profile, boolean isAdmin) throws SQLException {
@@ -161,8 +128,8 @@ public class ServiceUser {
         return nb;
     }
 
-    public ArrayList<Utilisateur> afficher() {
-        String select = "SELECT * FROM utilisateur";
+    public ArrayList<Utilisateur> afficherEmploye() {
+        String select = "SELECT * FROM utilisateur where profile!='client' and profile!='employe simple'";
 
         try {
             PreparedStatement ps = con.prepareStatement(select);
@@ -184,5 +151,38 @@ public class ServiceUser {
             e.printStackTrace();
         }
         return listeEmploye;
+    }
+
+    public ArrayList<Utilisateur> afficherClient() {
+        String select = "SELECT * FROM utilisateur where profile='client'";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur client = new Utilisateur();
+                client.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                client.setNom(rs.getString("nom"));
+                client.setPrenom(rs.getString("prenom"));
+                client.setEmail(rs.getString("email"));
+                client.setTelephone(rs.getString("telephone"));
+                client.setAdresse(rs.getString("adresse"));
+                listeClient.add(client);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return listeClient;
+    }
+
+    public void updatePassword(int id, String newPassword,String Ancien) throws SQLException {
+        String sql = "UPDATE `utilisateur` SET password=? WHERE idUtilisateur=? and password=? limit 1";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, newPassword);
+        ps.setInt(2, id);
+        ps.setString(3, Ancien);
+
+        ps.execute();
     }
 }
