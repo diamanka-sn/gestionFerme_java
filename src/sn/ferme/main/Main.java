@@ -155,7 +155,9 @@ public class Main extends javax.swing.JFrame {
             Utilisateur user = service.login(data);
             if (user != null) {
                 if ("client".equals(user.getProfile())) {
-                    showMessage(Message.MessageType.SUCCESS, "Client Connecter");
+                    loading.setVisible(false);
+                    this.dispose();
+                    Client.main(user);
                 } else if ("admin".equals(user.getProfile()) && user.isIsAdmin()) {
                     loading.setVisible(false);
                     this.dispose();

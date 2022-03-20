@@ -69,7 +69,7 @@ public class Admin extends javax.swing.JFrame {
                 if (index == 0) {
                     showForm(new Accueil());
                 } else if (index == 1) {
-                    showForm(new Finance());
+                    showForm(new Finance(user));
                 } else if (index == 2) {
                     showForm(new Production());
                 } else if (index == 3) {

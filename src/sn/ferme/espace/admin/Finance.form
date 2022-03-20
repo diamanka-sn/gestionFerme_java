@@ -87,7 +87,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="333" max="32767" attributes="0"/>
+              <EmptySpace pref="327" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -189,6 +189,7 @@
                       <Component id="comboType" alignment="0" max="32767" attributes="0"/>
                       <Component id="btnAjouterDepense" alignment="0" pref="542" max="32767" attributes="0"/>
                       <Component id="jDateChooser1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="LbQuantite" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -205,9 +206,11 @@
                   <Component id="comboType" min="-2" pref="35" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jDateChooser1" min="-2" pref="29" max="-2" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="LbQuantite" min="-2" pref="35" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnAjouterDepense" min="-2" pref="37" max="-2" attributes="0"/>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -242,6 +245,12 @@
           </Events>
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="jDateChooser1">
+        </Component>
+        <Component class="javax.swing.JTextField" name="LbQuantite">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Quantit&#xe9;"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

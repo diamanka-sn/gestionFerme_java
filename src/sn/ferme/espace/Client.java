@@ -5,20 +5,22 @@ import sn.ferme.event.EventMenuSelected;
 import sn.ferme.model.ModelMenu;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-import sn.ferme.espace.fermier.AccueilF;
-import sn.ferme.espace.fermier.Alimentation;
-import sn.ferme.espace.fermier.BovinF;
-import sn.ferme.espace.fermier.Passe;
-import sn.ferme.espace.fermier.ProductionF;
+import sn.ferme.espace.client.AccueilClient;
+
+import sn.ferme.main.Main;
 import sn.ferme.model.Utilisateur;
 
 public class Client extends javax.swing.JFrame {
@@ -28,10 +30,12 @@ public class Client extends javax.swing.JFrame {
     private MigLayout layout;
     private Animator animator;
     private boolean menuShow;
+    Utilisateur user;
 
     public Client(Utilisateur user) {
+        this.user = user;
         initComponents();
-        menu.bottom.setLabelNom(user.getNom());
+        menu.bottom.setLabelNom(user.getPrenom() + " " + user.getNom().toUpperCase());
         menu.bottom.setProfile(user.getProfile());
         init();
     }
@@ -44,7 +48,11 @@ public class Client extends javax.swing.JFrame {
         menu.addEventLogout(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-              // new Client().setVisible(false);
+                int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (confirme == 0) {
+                    logout();
+                }
+
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -59,22 +67,15 @@ public class Client extends javax.swing.JFrame {
             @Override
             public void selected(int index) {
                 if (index == 0) {
-                    showForm(new AccueilF());
-                } else if (index == 1) {
-                    showForm(new Alimentation());
-                } else if (index == 3) {
-                    showForm(new BovinF());
-                } else {
-                  //  showForm(new Passe());
+                    showForm(new AccueilClient(user));
                 }
             }
         });
-        menu.addMenu(new ModelMenu("Accueil", new ImageIcon(getClass().getResource("/sn/ferme/icon/tb.png"))));
+        menu.addMenu(new ModelMenu("Accueil", new ImageIcon(getClass().getResource("/sn/ferme/icon/home.png"))));
         menu.addMenu(new ModelMenu("Acheter", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
         menu.addMenu(new ModelMenu("Panier", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
-        menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
-        menu.addMenu(new ModelMenu("Mot de passe", new ImageIcon(getClass().getResource("/sn/ferme/icon/key.png"))));
-        //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");
         body.add(main, "w 100%");
         TimingTarget target = new TimingTargetAdapter() {
@@ -101,7 +102,7 @@ public class Client extends javax.swing.JFrame {
         animator.setResolution(0);
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
-        showForm(new AccueilF());
+        showForm(new AccueilClient(user));
     }
 
     private void showForm(Component com) {
@@ -109,6 +110,11 @@ public class Client extends javax.swing.JFrame {
         main.add(com);
         main.repaint();
         main.revalidate();
+    }
+
+    private void logout() {
+        this.dispose();
+        new Main().setVisible(true);
     }
 
     @SuppressWarnings("unchecked")
@@ -147,10 +153,15 @@ public class Client extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-public static void main(Utilisateur user) {
+    public static void main(Utilisateur user) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Client(user).setVisible(true);
+                Client main = new Client(user);
+                Image ic = Toolkit.getDefaultToolkit()
+                        .getImage(getClass().getResource("/sn/ferme/icon/icons8_cow_breed_100px_4.png"));
+                main.setIconImage(ic);
+                main.setTitle("Espace client");
+                main.setVisible(true);
             }
         });
     }

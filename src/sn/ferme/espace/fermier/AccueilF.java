@@ -3,9 +3,21 @@ package sn.ferme.espace.fermier;
 import sn.ferme.espace.admin.*;
 import sn.ferme.chart.ModelChart;
 import java.awt.Color;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import sn.ferme.model.ModelDiagramme;
+import sn.ferme.model.Utilisateur;
+import sn.ferme.service.ServiceTraite;
+import sn.ferme.service.ServiceUser;
 
 public class AccueilF extends javax.swing.JPanel {
+
+    private ServiceUser service = new ServiceUser();
 
     public AccueilF() {
         initComponents();
@@ -14,20 +26,66 @@ public class AccueilF extends javax.swing.JPanel {
     }
 
     private void init() {
-        chart.addLegend("Dépenses", new Color(245, 189, 135));
-        chart.addLegend("Production", new Color(135, 189, 245));
-        chart.addLegend("Vente Lait", new Color(189, 135, 245));
-        chart.addLegend("Vente Bovin", new Color(139, 229, 222));
-        chart.addData(new ModelChart("Janvier", new double[]{100, 150, 20, 500}));
-        chart.addData(new ModelChart("Février", new double[]{600, 750, 30, 150}));
-        chart.addData(new ModelChart("Mars", new double[]{200, 350, 100, 900}));
-        chart.addData(new ModelChart("Avril", new double[]{480, 150, 50, 700}));
-        chart.addData(new ModelChart("Mai", new double[]{350, 540, 300, 150}));
-        chart.addData(new ModelChart("Juin", new double[]{190, 500, 70, 1000}));
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.addRow(new Object[]{1, "Jonh china", "Masculin", "Jonh00001@gmail.com", "+789 966 666 333"});
-        model.addRow(new Object[]{2, "Jonh china", "Masculin", "Jonh00001@gmail.com", "+789 966 666 333"});
-     
+        List<ModelDiagramme> list1 = new ArrayList<>();
+        Color[] couleurs;
+        couleurs = new Color[5];
+        couleurs[0] = new Color(4, 174, 243);
+        couleurs[1] = new Color(215, 39, 250);
+        couleurs[2] = new Color(238, 167, 35);
+        couleurs[3] = new Color(127, 63, 255);
+        couleurs[4] = new Color(245, 79, 99);
+        try {
+            int Production = new ServiceTraite().recupererProdictionTotal();
+            int Vendu = new ServiceTraite().recupererVenduLait();
+            int stock = Production - Vendu;
+            list1.add(new ModelDiagramme("Stock Lait", stock, couleurs[1]));
+            list1.add(new ModelDiagramme("Lait Vendu", Vendu, couleurs[2]));
+            chartDiagramme2.setModel(list1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(AccueilF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        data();
+    }
+    Object body[][] = new Object[2][6];
+
+    public void data() {
+
+        String[] header = {"Id commande", "Date commande", "Capacite", "Prenom ", "Nom", "Email"};
+        int i = 0;
+        for (Utilisateur m : service.afficherCommandeNONValiderLAit()) {
+            body[i][0] = m.getIdCom();
+            body[i][1] = m.getDateCom();
+            body[i][2] = m.getCapacite();
+            body[i][3] = m.getPrenom();
+            body[i][4] = m.getNom();
+            body[i][5] = m.getEmail();
+            i++;
+        }
+        table.setModel(new DefaultTableModel(body, header));
+    }
+
+    public void comfirmerVenteLait() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            int id = (int) body[row][0];
+            String date = (String) body[row][1];
+            // int code = Integer.parseInt(id);
+            System.out.println(id);
+            int sup = JOptionPane.showConfirmDialog(null,
+                    "Veuillez confirmer la vente de lait ?", "Confirmation de vente",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (sup == 0) {
+                try {
+                    service.UpdateCommandeLAit(id);
+                    JOptionPane.showMessageDialog(null, "Lait vendu!!!");
+                } catch (SQLException ex) {
+                    Logger.getLogger(Production.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -35,36 +93,17 @@ public class AccueilF extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        panelRound1 = new sn.ferme.swing.PanelRound();
-        chart = new sn.ferme.chart.Chart();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new sn.ferme.swing.TableColumn();
         jLabel2 = new javax.swing.JLabel();
         scrollBar1 = new sn.ferme.swing.ScrollBar();
+        btnValiderCommande = new javax.swing.JButton();
+        chartDiagramme2 = new sn.ferme.chart.ChartDiagramme();
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(79, 79, 79));
         jLabel1.setText("Tableau de bord");
         jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
-
-        panelRound1.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout panelRound1Layout = new javax.swing.GroupLayout(panelRound1);
-        panelRound1.setLayout(panelRound1Layout);
-        panelRound1Layout.setHorizontalGroup(
-            panelRound1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelRound1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        panelRound1Layout.setVerticalGroup(
-            panelRound1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRound1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chart, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
-                .addContainerGap())
-        );
 
         jScrollPane1.setBackground(new java.awt.Color(245, 245, 245));
         jScrollPane1.setBorder(null);
@@ -93,10 +132,18 @@ public class AccueilF extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 20)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(79, 79, 79));
-        jLabel2.setText("Liste fermier");
+        jLabel2.setText("Commande Lait");
         jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
         scrollBar1.setBackground(new java.awt.Color(245, 245, 245));
+
+        btnValiderCommande.setBackground(new java.awt.Color(0, 153, 0));
+        btnValiderCommande.setText("Valider Commande");
+        btnValiderCommande.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnValiderCommandeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,31 +152,40 @@ public class AccueilF extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelRound1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(chartDiagramme2, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 991, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnValiderCommande)
+                        .addGap(38, 38, 38))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelRound1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(chartDiagramme2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(btnValiderCommande, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(81, 81, 81)
                         .addComponent(scrollBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -137,12 +193,16 @@ public class AccueilF extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnValiderCommandeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValiderCommandeActionPerformed
+        comfirmerVenteLait();  // TODO add your handling code here:
+    }//GEN-LAST:event_btnValiderCommandeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private sn.ferme.chart.Chart chart;
+    private javax.swing.JButton btnValiderCommande;
+    private sn.ferme.chart.ChartDiagramme chartDiagramme2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private sn.ferme.swing.PanelRound panelRound1;
     private sn.ferme.swing.ScrollBar scrollBar1;
     private sn.ferme.swing.TableColumn table;
     // End of variables declaration//GEN-END:variables

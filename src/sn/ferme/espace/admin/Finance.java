@@ -15,6 +15,7 @@ import javax.swing.table.DefaultTableModel;
 
 import sn.ferme.model.ModelCard;
 import sn.ferme.model.ModelDepense;
+import sn.ferme.model.Utilisateur;
 import sn.ferme.service.ServiceDepense;
 import sn.ferme.service.ValiderChamp;
 
@@ -22,13 +23,18 @@ public class Finance extends javax.swing.JPanel {
 
     private ServiceDepense serviced = new ServiceDepense();
     SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoixAliment = new SimpleDateFormat("yyyy-MM-dd");
+
     Date dactuelle = new Date();
     String dA = dchoix.format(dactuelle);
     String date = null;
     Date dateJour = null, dateChoix = null;
     int nb;
 
-    public Finance() {
+    Utilisateur user;
+
+    public Finance(Utilisateur user) {
+        this.user = user;
         try {
             initComponents();
             data();
@@ -109,16 +115,35 @@ public class Finance extends javax.swing.JPanel {
         int t = serviced.recupererCodeType(type);
         String montant = lbMontant.getText();
         date = dchoix.format(jDateChooser1.getDate());
+        String q = LbQuantite.getText();
         if (libelle.isEmpty() || montant.isEmpty() || montant.contains("Montant depense")) {
             JOptionPane.showMessageDialog(null, "Veuillez remplir tous les champs", "Tous les champs sont obligatoires", JOptionPane.ERROR_MESSAGE);
         } else if (jDateChooser1.getDate() == null) {
             JOptionPane.showMessageDialog(null, "Veuillez choisir une date", "Choisir", JOptionPane.ERROR_MESSAGE);
         } else if (verifDate() == -1) {
             JOptionPane.showMessageDialog(null, "Veuillez choisir une date correcte", "Choix date incorrect", JOptionPane.ERROR_MESSAGE);
+        } else if (type.equals("Achat aliment") && q.contains("Quantité")) {
+            JOptionPane.showMessageDialog(null, "La quantité est obligatoire");
         } else {
+            int quantite = 0;
+            if (q.equals("Quantité")) {
+                quantite = 0;
+            } else {
+                quantite = Integer.parseInt(q);
+            }
             int m = Integer.parseInt(montant);
-            ModelDepense depense = new ModelDepense(0, t, date, libelle, m);
-            serviced.insertDepense(depense);
+            ModelDepense depense = new ModelDepense(0, t, date, libelle, m, quantite);
+            int aj = serviced.insertDepense(depense);
+            if (aj > 0) {
+                JOptionPane.showMessageDialog(null, "Depense ajouter avec success");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erreur ajout depense", "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+            if (type.equals("Achat aliment")) {
+                String dAliment = dchoixAliment.format(jDateChooser1.getDate());
+                ModelDepense aliment = new ModelDepense(0, user.getIdUtilisateur(), libelle, 0, dAliment);
+                serviced.insertAliment(aliment);
+            }
         }
 
     }
@@ -140,6 +165,7 @@ public class Finance extends javax.swing.JPanel {
         txtLibele = new javax.swing.JTextField();
         btnAjouterDepense = new javax.swing.JButton();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        LbQuantite = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         txtTypeDepense = new javax.swing.JTextField();
         btnAjouterType = new javax.swing.JButton();
@@ -188,6 +214,9 @@ public class Finance extends javax.swing.JPanel {
             }
         });
 
+        LbQuantite.setText("Quantité");
+        LbQuantite.setToolTipText("");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -199,7 +228,8 @@ public class Finance extends javax.swing.JPanel {
                     .addComponent(lbMontant)
                     .addComponent(comboType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAjouterDepense, javax.swing.GroupLayout.DEFAULT_SIZE, 542, Short.MAX_VALUE)
-                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(LbQuantite))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -213,9 +243,11 @@ public class Finance extends javax.swing.JPanel {
                 .addComponent(comboType, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LbQuantite, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAjouterDepense, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         txtTypeDepense.setText("Ajouter type de depense");
@@ -340,15 +372,15 @@ public class Finance extends javax.swing.JPanel {
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(333, Short.MAX_VALUE))
+                .addContainerGap(327, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAjouterDepenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterDepenseActionPerformed
         try {
-            ajouterDepense(); // TODO add your handling code here:
+            ajouterDepense();
         } catch (SQLException ex) {
-            Logger.getLogger(Finance.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
         }
     }//GEN-LAST:event_btnAjouterDepenseActionPerformed
 
@@ -361,6 +393,7 @@ public class Finance extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAjouterTypeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField LbQuantite;
     private javax.swing.JButton btnAjouterDepense;
     private javax.swing.JButton btnAjouterType;
     private sn.ferme.component.Card cardBenefice;

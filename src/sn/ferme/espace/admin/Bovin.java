@@ -191,7 +191,7 @@ public class Bovin extends javax.swing.JPanel {
 
     private void showMessage(Component com) {
         detailsBovin.removeAll();
-        detailsBovin.setLayout(new FlowLayout()); 
+        detailsBovin.setLayout(new FlowLayout());
         detailsBovin.add(com);
         detailsBovin.repaint();
         detailsBovin.revalidate();
@@ -469,12 +469,12 @@ public class Bovin extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -519,8 +519,16 @@ public class Bovin extends javax.swing.JPanel {
         } else {
             String id = (String) body[row][0];
             String description = (String) body[row][7];
+            String dateNaiss = (String) body[row][2];
+            String nom = (String) body[row][1];
+            String etatSante = (String) body[row][3];
+            String geniteur = (String) body[row][4];
+            String genitrice = (String) body[row][5];
+            String etat = (String) body[row][6];
+            String situation = (String) body[row][4];
+
             System.out.println(id);
-            showMessage(new ModifierBovin(id,description));// TODO add your handling code here:
+            showMessage(new ModifierBovin(id, description));// TODO add your handling code here:
         }
     }//GEN-LAST:event_btnModifierActionPerformed
 
@@ -531,7 +539,7 @@ public class Bovin extends javax.swing.JPanel {
     private void sauvegarderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sauvegarderActionPerformed
         enregistrerBovin();// TODO add your handling code here:
     }//GEN-LAST:event_sauvegarderActionPerformed
-   
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private sn.ferme.login.swing.ButtonOutLine ajouterRace;
     private javax.swing.JButton btnDetails;

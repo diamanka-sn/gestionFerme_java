@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,11 +25,11 @@ import sn.ferme.model.ModelTraite;
 public class ServiceTraite {
 
     private final Connection con;
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     Date dactuelle = new Date();
 
     ArrayList<String> listeVache = new ArrayList<String>();
-    ArrayList<ModelTraite> listeProdVache = new ArrayList<ModelTraite>();
+    HashMap<String, ModelTraite> listeProdVache = new HashMap<>();
 
     public ServiceTraite() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -100,7 +101,7 @@ public class ServiceTraite {
         return doublon;
     }
 
-    public ArrayList<ModelTraite> afficherPodParVache() {
+    public HashMap<String, ModelTraite> afficherPodParVache() {
         try {
             String sql = "SELECT SUM(traitedujour.traiteMatin) AS jour,SUM(traitedujour.traiteSoir) as soir, bovin.nom AS nom FROM `vache`,bovin,traitedujour WHERE bovin.idBovin=vache.idBovin AND vache.idBovin=traitedujour.idBovin GROUP BY nom";
             PreparedStatement p = con.prepareStatement(sql);
@@ -110,12 +111,36 @@ public class ServiceTraite {
                 traite.setNom(rs.getString("nom"));
                 traite.setTraiteMatin(rs.getInt("jour"));
                 traite.setTraiteSoir(rs.getInt("soir"));
-                listeProdVache.add(traite);
+                listeProdVache.put(traite.getNom(), traite);
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(ServiceTraite.class.getName()).log(Level.SEVERE, null, ex);
         }
         return listeProdVache;
+    }
+
+    public int recupererProdictionTotal() throws SQLException {
+        int code = 0;
+        String sql = "SELECT SUM(traiteMatin) + SUM(traiteSoir) as production FROM `traitedujour`";
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ResultSet r = ps.executeQuery();
+        if (r.first()) {
+            code = r.getInt("production");
+        }
+        return code;
+    }
+
+    public int recupererVenduLait() throws SQLException {
+        int code = 0;
+        String sql = "SELECT Sum(capacite) as vendu FROM `ventelait` where etat=true";
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        ResultSet r = ps.executeQuery();
+        if (r.first()) {
+            code = r.getInt("vendu");
+        }
+        return code;
     }
 }

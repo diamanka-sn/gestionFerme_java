@@ -19,6 +19,7 @@ public class ModifierBovin extends javax.swing.JPanel {
             comPeriode.disable();
             comPhase.disable();
         }
+        
     }
 
     /**

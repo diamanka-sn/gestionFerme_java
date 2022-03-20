@@ -1,9 +1,12 @@
 package sn.ferme.espace.fermier;
 
 import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Month;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,6 +14,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sn.ferme.espace.admin.Bovin;
+import sn.ferme.espace.admin.DetailBovin;
+import sn.ferme.espace.admin.ModifierBovin;
 import sn.ferme.model.ModelBovin;
 import sn.ferme.service.ServiceBovin;
 
@@ -18,6 +23,8 @@ public class BovinF extends javax.swing.JPanel {
 
     private ServiceBovin service = new ServiceBovin();
     SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dataPese = new SimpleDateFormat("yyyy-MM-dd");
+
     Date dactuelle = new Date();
     String dA = dchoix.format(dactuelle);
     String date = null;
@@ -38,6 +45,7 @@ public class BovinF extends javax.swing.JPanel {
         }
         data();
         setOpaque(false);
+
     }
     Object body[][] = new Object[service.afficherBovin().size()][8];
 
@@ -75,8 +83,35 @@ public class BovinF extends javax.swing.JPanel {
         table.setModel(new DefaultTableModel(body, header));
     }
 
-    public void ajoutPoids() {
+    public void ajoutPoids() throws SQLException {
+        String bovin = bovinNonpese.getSelectedItem().toString();
+        String poids = txtPoids.getText();
+        if (poids.isEmpty() || poids.contains("poids bovin")) {
+            JOptionPane.showMessageDialog(null, " Veuillez donner le poids du bovin");
+        } else if (datePese.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Veuillez choisir une date");
+        } else if (verifDate(datePese) == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez choisir une date valide");
+        } else {
+            int code = service.recupererCodeBovin(bovin);
+            int p = Integer.parseInt(poids);
+            String dPesage = dataPese.format(datePese.getDate());
+            ModelBovin pesageBovin = new ModelBovin(0, code, dPesage, p);
+            int res = service.insererPesage(pesageBovin);
+            if (res > 0) {
+                JOptionPane.showMessageDialog(null, "Pesage ajouter avec succes");
+            } else {
+                JOptionPane.showMessageDialog(null, "Erreur d'ajout pesage");
+            }
+        }
+    }
 
+    private void showMessage(Component com) {
+        detailsBovin.removeAll();
+        detailsBovin.setLayout(new FlowLayout());
+        detailsBovin.add(com);
+        detailsBovin.repaint();
+        detailsBovin.revalidate();
     }
 
     @SuppressWarnings("unchecked")
@@ -96,7 +131,7 @@ public class BovinF extends javax.swing.JPanel {
         choix_geniteur = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        txtRace = new sn.ferme.login.swing.MyTextField();
+        txtPoids = new sn.ferme.login.swing.MyTextField();
         ajouterPoids = new sn.ferme.login.swing.ButtonOutLine();
         bovinNonpese = new javax.swing.JComboBox<>();
         datePese = new com.toedter.calendar.JDateChooser();
@@ -107,6 +142,7 @@ public class BovinF extends javax.swing.JPanel {
         btnDetails = new javax.swing.JButton();
         btnModifier = new javax.swing.JButton();
         btnSupprimer = new javax.swing.JButton();
+        detailsBovin = new javax.swing.JPanel();
 
         txtNom.setText("Nom bovin");
 
@@ -193,7 +229,7 @@ public class BovinF extends javax.swing.JPanel {
         jLabel3.setText("Ajout Nouveau né");
         jLabel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
-        txtRace.setText("Nom race");
+        txtPoids.setText("Poids bovin");
 
         ajouterPoids.setText("Ajouter poids");
         ajouterPoids.addActionListener(new java.awt.event.ActionListener() {
@@ -216,7 +252,7 @@ public class BovinF extends javax.swing.JPanel {
                     .addComponent(ajouterPoids, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(bovinNonpese, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtRace, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                        .addComponent(txtPoids, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
                     .addComponent(datePese, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -227,7 +263,7 @@ public class BovinF extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(datePese, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(10, 10, 10)
-                .addComponent(txtRace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtPoids, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ajouterPoids, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -289,6 +325,17 @@ public class BovinF extends javax.swing.JPanel {
             }
         });
 
+        javax.swing.GroupLayout detailsBovinLayout = new javax.swing.GroupLayout(detailsBovin);
+        detailsBovin.setLayout(detailsBovinLayout);
+        detailsBovinLayout.setHorizontalGroup(
+            detailsBovinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 319, Short.MAX_VALUE)
+        );
+        detailsBovinLayout.setVerticalGroup(
+            detailsBovinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -312,7 +359,8 @@ public class BovinF extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSupprimer, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
-                .addContainerGap(212, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(detailsBovin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,6 +383,7 @@ public class BovinF extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                 .addGap(10, 10, 10))
+            .addComponent(detailsBovin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -342,13 +391,36 @@ public class BovinF extends javax.swing.JPanel {
     }//GEN-LAST:event_sauvegarderActionPerformed
 
     private void ajouterPoidsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterPoidsActionPerformed
-
+        try {
+            ajoutPoids();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }//GEN-LAST:event_ajouterPoidsActionPerformed
 
     private void btnDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetailsActionPerformed
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            String id = (String) body[row][0];
+            System.out.println(id);
+            showMessage(new DetailBovin(id));
+        }
     }//GEN-LAST:event_btnDetailsActionPerformed
 
     private void btnModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifierActionPerformed
+
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            String id = (String) body[row][0];
+            String description = (String) body[row][6];
+        
+            System.out.println(id);
+            showMessage(new ModifierBovin(id, description));// TODO add your handling code here:
+        }
     }//GEN-LAST:event_btnModifierActionPerformed
 
     private void btnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerActionPerformed
@@ -364,6 +436,7 @@ public class BovinF extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> choix_geniteur;
     private javax.swing.JComboBox<String> choix_genitrice;
     private com.toedter.calendar.JDateChooser datePese;
+    private javax.swing.JPanel detailsBovin;
     private com.toedter.calendar.JDateChooser jDateNaissance;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -378,7 +451,7 @@ public class BovinF extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> txtDescription;
     private javax.swing.JComboBox<String> txtEtatSante;
     private sn.ferme.login.swing.MyTextField txtNom;
+    private sn.ferme.login.swing.MyTextField txtPoids;
     private sn.ferme.login.swing.MyTextField txtPrix;
-    private sn.ferme.login.swing.MyTextField txtRace;
     // End of variables declaration//GEN-END:variables
 }

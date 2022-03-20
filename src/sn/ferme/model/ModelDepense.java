@@ -16,8 +16,88 @@ public class ModelDepense {
     private String dateDepense;
     private String libelle;
     private int montant;
+    private int quantite;
     private String nomType;
     private int idType;
+
+    private String aliment;
+    private int stock;
+    private int consomes;
+
+    private int idAlimentation;
+    private int idUtilisateur;
+    private String nomAliment;
+    private String date;
+
+    public ModelDepense(String aliment, int stock, int consomes) {
+        this.aliment = aliment;
+        this.stock = stock;
+        this.consomes = consomes;
+    }
+
+    public ModelDepense( int idAlimentation, int idUtilisateur, String nomAliment,int quantite, String date) {
+        this.quantite = quantite;
+        this.idAlimentation = idAlimentation;
+        this.idUtilisateur = idUtilisateur;
+        this.nomAliment = nomAliment;
+        this.date = date;
+    }
+
+    public int getIdAlimentation() {
+        return idAlimentation;
+    }
+
+    public void setIdAlimentation(int idAlimentation) {
+        this.idAlimentation = idAlimentation;
+    }
+
+    public int getIdUtilisateur() {
+        return idUtilisateur;
+    }
+
+    public void setIdUtilisateur(int idUtilisateur) {
+        this.idUtilisateur = idUtilisateur;
+    }
+
+    public String getNomAliment() {
+        return nomAliment;
+    }
+
+    public void setNomAliment(String nomAliment) {
+        this.nomAliment = nomAliment;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getAliment() {
+        return aliment;
+    }
+
+    public void setAliment(String aliment) {
+        this.aliment = aliment;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public int getConsomes() {
+        return consomes;
+    }
+
+    public void setConsomes(int consomes) {
+        this.consomes = consomes;
+    }
 
     public ModelDepense(int idDepense, String dateDepense, String libelle, int montant, String nomType) {
         this.idDepense = idDepense;
@@ -44,6 +124,16 @@ public class ModelDepense {
         this.dateDepense = dateDepense;
         this.libelle = libelle;
         this.montant = montant;
+        this.idType = idType;
+        //   this.quantite = quantite;
+    }
+
+    public ModelDepense(int idDepense, int idType, String dateDepense, String libelle, int montant, int quantite) {
+        this.idDepense = idDepense;
+        this.dateDepense = dateDepense;
+        this.libelle = libelle;
+        this.montant = montant;
+        this.quantite = quantite;
         this.idType = idType;
     }
 
@@ -101,5 +191,13 @@ public class ModelDepense {
 
     public void setIdType(int idType) {
         this.idType = idType;
+    }
+
+    public int getQuantite() {
+        return quantite;
+    }
+
+    public void setQuantite(int quantite) {
+        this.quantite = quantite;
     }
 }

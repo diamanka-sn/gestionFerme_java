@@ -16,82 +16,90 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel4" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="Lb_code" pref="120" max="32767" attributes="0"/>
-                                  <Component id="Lb_nom" max="32767" attributes="0"/>
-                                  <Component id="Lb_race" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel6" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel5" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="Lb_genitrice" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="Lb_geniteur" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="Lb_naissance" alignment="0" max="32767" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel9" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel8" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel12" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel13" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                                  <Component id="jLabel10" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="Lb_situation" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="Lb_etat" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="Lb_etat_sante" alignment="1" pref="120" max="32767" attributes="0"/>
-                                  <Component id="Lb_description" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="Lb_prix" alignment="1" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="LbDateAchat" min="-2" pref="99" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="Lb_achat" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
+                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="LbMontantAchat" min="-2" pref="99" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="LbMontant" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="171" max="-2" attributes="0"/>
+                              <Component id="label_production" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace min="0" pref="182" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="169" max="-2" attributes="0"/>
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="182" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="chart" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel4" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel1" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel2" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="Lb_code" pref="120" max="32767" attributes="0"/>
+                                          <Component id="Lb_nom" max="32767" attributes="0"/>
+                                          <Component id="Lb_race" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel6" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel7" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel5" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="Lb_genitrice" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="Lb_geniteur" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="Lb_naissance" alignment="0" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="jLabel9" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel8" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel12" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel13" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                          <Component id="jLabel10" alignment="0" min="-2" pref="99" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="Lb_situation" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="Lb_etat" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="Lb_etat_sante" alignment="1" pref="120" max="32767" attributes="0"/>
+                                          <Component id="Lb_description" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="Lb_prix" alignment="1" max="32767" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="LbDateAchat" min="-2" pref="99" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="Lb_achat" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="LbMontantAchat" min="-2" pref="99" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="LbMontant" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="171" max="-2" attributes="0"/>
-              <Component id="label_production" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -193,7 +201,9 @@
               </Group>
               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
               <Component id="label_production" min="-2" pref="48" max="-2" attributes="0"/>
-              <EmptySpace pref="205" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="chart" min="-2" pref="304" max="-2" attributes="0"/>
+              <EmptySpace pref="116" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -502,6 +512,8 @@
           <Color blue="66" green="66" red="0" type="rgb"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="sn.ferme.chart.Chart" name="chart">
     </Component>
   </SubComponents>
 </Form>

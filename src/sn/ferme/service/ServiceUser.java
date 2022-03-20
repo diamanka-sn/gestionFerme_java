@@ -16,6 +16,7 @@ public class ServiceUser {
     private final Connection con;
     ArrayList<Utilisateur> listeEmploye = new ArrayList<Utilisateur>();
     ArrayList<Utilisateur> listeClient = new ArrayList<Utilisateur>();
+    ArrayList<Utilisateur> listeCommandeNONValider = new ArrayList<Utilisateur>();
 
     public ServiceUser() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -176,12 +177,63 @@ public class ServiceUser {
         return listeClient;
     }
 
-    public void updatePassword(int id, String newPassword,String Ancien) throws SQLException {
+    public void updatePassword(int id, String newPassword, String Ancien) throws SQLException {
         String sql = "UPDATE `utilisateur` SET password=? WHERE idUtilisateur=? and password=? limit 1";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, newPassword);
         ps.setInt(2, id);
         ps.setString(3, Ancien);
+
+        ps.execute();
+    }
+
+    public void updateUser(int id, String nom, String prenom, String email, String telephone, String adresse) throws SQLException {
+        String sql = "UPDATE `utilisateur` SET nom=?,prenom=?,email=?,telephone=?,adresse=? WHERE idUtilisateur=? limit 1";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, nom);
+        ps.setString(2, prenom);
+        ps.setString(3, email);
+        ps.setString(4, telephone);
+        ps.setString(5, adresse);
+        ps.setInt(6, id);
+
+        ps.execute();
+    }
+
+    public ArrayList<Utilisateur> afficherCommandeNONValiderLAit() {
+        String select = "SELECT * FROM `ventelait`,commande,utilisateur WHERE utilisateur.idUtilisateur=commande.idUtilisateur and commande.idCom=ventelait.idCom AND utilisateur.profile='client' and ventelait.etat=false";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur employe = new Utilisateur();
+                employe.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                employe.setNom(rs.getString("nom"));
+                employe.setPrenom(rs.getString("prenom"));
+                employe.setEmail(rs.getString("email"));
+                employe.setTelephone(rs.getString("telephone"));
+                employe.setAdresse(rs.getString("adresse"));
+                employe.setProfile(rs.getString("profile"));
+                employe.setIsAdmin(rs.getBoolean("isAdmin"));
+                employe.setCapacite(rs.getInt("capacite"));
+                employe.setDateCom(rs.getString("dateCom"));
+                employe.setIdCom(rs.getInt("idCom"));
+                listeCommandeNONValider.add(employe);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return listeCommandeNONValider;
+    }
+
+    public void UpdateCommandeLAit(int idCom) throws SQLException {
+        String sql = "UPDATE `ventelait` SET etat=? WHERE idCom=?  limit 1";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setBoolean(1, true);
+        ps.setInt(2, idCom);
+      
 
         ps.execute();
     }

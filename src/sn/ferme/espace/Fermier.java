@@ -22,12 +22,12 @@ import sn.ferme.espace.fermier.Alimentation;
 import sn.ferme.espace.fermier.BovinF;
 import sn.ferme.espace.fermier.Passe;
 import sn.ferme.espace.fermier.ProductionF;
+import sn.ferme.espace.fermier.Sante;
 import sn.ferme.main.Main;
 import sn.ferme.model.Utilisateur;
 
 public class Fermier extends javax.swing.JFrame {
 
-   
     private Menu menu = new Menu();
     private JPanel main = new JPanel();
     private MigLayout layout;
@@ -38,10 +38,8 @@ public class Fermier extends javax.swing.JFrame {
         initComponents();
         init(user);
         menu.bottom.setProfile(user.getProfile());
-        menu.bottom.setLabelNom(user.getPrenom() + " "+user.getNom());
+        menu.bottom.setLabelNom(user.getPrenom() + " " + user.getNom());
     }
-
-   
 
     private void init(Utilisateur user) {
         layout = new MigLayout("fill", "0[]10[]5", "0[fill]0");
@@ -51,8 +49,8 @@ public class Fermier extends javax.swing.JFrame {
         menu.addEventLogout(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-              int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-                if(confirme ==0){
+                int confirme = JOptionPane.showConfirmDialog(null, "Voulez vous vous deconnecter", "Confirmation", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (confirme == 0) {
                     logout();
                 }
             }
@@ -76,6 +74,8 @@ public class Fermier extends javax.swing.JFrame {
                     showForm(new ProductionF(user));
                 } else if (index == 3) {
                     showForm(new BovinF());
+                } else if (index == 4) {
+                    showForm(new Sante());
                 } else {
                     showForm(new Passe(user));
                 }
@@ -85,6 +85,8 @@ public class Fermier extends javax.swing.JFrame {
         menu.addMenu(new ModelMenu("Alimentation", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
         menu.addMenu(new ModelMenu("Production", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
         menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
+        menu.addMenu(new ModelMenu("Santé", new ImageIcon(getClass().getResource("/sn/ferme/icon/sante.png"))));
+
         menu.addMenu(new ModelMenu("Informations personnelles", new ImageIcon(getClass().getResource("/sn/ferme/icon/information.png"))));
         //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");
@@ -122,10 +124,12 @@ public class Fermier extends javax.swing.JFrame {
         main.repaint();
         main.revalidate();
     }
+
     private void logout() {
         this.dispose();
         new Main().setVisible(true);
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -170,7 +174,7 @@ public class Fermier extends javax.swing.JFrame {
                 main.setIconImage(ic);
                 main.setTitle("Espace Fermier");
                 main.setVisible(true);
-              //  new Admin(user).setVisible(true);
+                //  new Admin(user).setVisible(true);
             }
         });
     }

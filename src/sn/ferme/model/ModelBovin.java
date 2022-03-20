@@ -36,8 +36,112 @@ public class ModelBovin {
     private String periode;
 
     private int idPesage;
-    private Date datePese;
+    private String datePese;
     private double poids;
+
+    private String maladie;
+    private String dateMaladie;
+    
+    private int nombre;
+    private int mois;
+    private int idCom;
+    private String dateCom;
+
+    public ModelBovin(int mois,double poids) {
+        this.poids = poids;
+        this.mois = mois;
+    }
+
+    public int getMois() {
+        return mois;
+    }
+
+    public void setMois(int mois) {
+        this.mois = mois;
+    }
+
+    private int capacite;
+
+    public int getCapacite() {
+        return capacite;
+    }
+
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
+    }
+
+    public ModelBovin(int idCom, int capacite) {
+        this.idCom = idCom;
+        this.capacite = capacite;
+    }
+    
+    public int getIdCom() {
+        return idCom;
+    }
+
+    public void setIdCom(int idCom) {
+        this.idCom = idCom;
+    }
+
+    public String getDateCom() {
+        return dateCom;
+    }
+
+    public ModelBovin( int idCom,int idUtilisateur, String dateCom) {
+        this.idUtilisateur = idUtilisateur;
+        this.idCom = idCom;
+        this.dateCom = dateCom;
+    }
+
+    public ModelBovin( int idCom,int idBovin, int prix) {
+        this.idBovin = idBovin;
+        this.prix = prix;
+        this.idCom = idCom;
+    }
+
+    
+    public void setDateCom(String dateCom) {
+        this.dateCom = dateCom;
+    }
+    
+    
+    
+    public ModelBovin(String description, int nombre) {
+        this.description = description;
+        this.nombre = nombre;
+    }
+
+    public int getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(int nombre) {
+        this.nombre = nombre;
+    }
+    
+    public String getMaladie() {
+        return maladie;
+    }
+
+    public void setMaladie(String maladie) {
+        this.maladie = maladie;
+    }
+
+    public String getDateMaladie() {
+        return dateMaladie;
+    }
+
+    public void setDateMaladie(String dateMaladie) {
+        this.dateMaladie = dateMaladie;
+    }
+
+    public ModelBovin(String codeBovin, String nom, String nomRace, String maladie, String dateMaladie) {
+        this.nomRace = nomRace;
+        this.nom = nom;
+        this.codeBovin = codeBovin;
+        this.maladie = maladie;
+        this.dateMaladie = dateMaladie;
+    }
 
     public ModelBovin(int idBovin, int idRace, String codeBovin, String nom, String photo, String dateNaissance, String etatSante, String geniteur, String genetrice, String etat, String situation, int prix, String description) {
         this.idBovin = idBovin;
@@ -127,7 +231,7 @@ public class ModelBovin {
         this.periode = periode;
     }
 
-    public ModelBovin(int idBovin, int idRace, String nomRace, String nom, String codeBovin, String photo, String dateNaissance, String etatSante, String geniteur, String genetrice, String etat, String situation, int prix, String description, int idAchatBovin, int idUtilisateur, int montantAchat, String dateAchatBovin, String phase, String periode, int idPesage, Date datePese, double poids) {
+    public ModelBovin(int idBovin, int idRace, String nomRace, String nom, String codeBovin, String photo, String dateNaissance, String etatSante, String geniteur, String genetrice, String etat, String situation, int prix, String description, int idAchatBovin, int idUtilisateur, int montantAchat, String dateAchatBovin, String phase, String periode, int idPesage, String datePese, double poids) {
         this.idBovin = idBovin;
         this.idRace = idRace;
         this.nomRace = nomRace;
@@ -153,7 +257,7 @@ public class ModelBovin {
         this.poids = poids;
     }
 
-    public ModelBovin(int idPesage, int idBovin, Date datePese, double poids) {
+    public ModelBovin(int idPesage, int idBovin, String datePese, double poids) {
         this.idBovin = idBovin;
         this.idPesage = idPesage;
         this.datePese = datePese;
@@ -168,11 +272,11 @@ public class ModelBovin {
         this.idPesage = idPesage;
     }
 
-    public Date getDatePese() {
+    public String getDatePese() {
         return datePese;
     }
 
-    public void setDatePese(Date datePese) {
+    public void setDatePese(String datePese) {
         this.datePese = datePese;
     }
 

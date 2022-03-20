@@ -1,11 +1,15 @@
 package sn.ferme.espace.admin;
 
+import java.awt.Color;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sn.ferme.model.ModelBovin;
+import sn.ferme.model.ModelDiagramme;
 import sn.ferme.service.ServiceBovin;
 
 public class Production extends javax.swing.JPanel {
@@ -17,8 +21,27 @@ public class Production extends javax.swing.JPanel {
         setOpaque(false);
         data();
         dataEnVente();
+        dataVendu();
+        dataCommander();
     }
     Object body[][] = new Object[service.afficherBovinNonEnLigne().size()][6];
+    Object bodyc[][] = new Object[service.afficherBovinCommander().size()][6];
+
+    public void dataCommander() {
+
+        String[] header = {"Code", "Nom", "Naissance", "prix", "Description", "Race","Client"};
+        int i = 0;
+        for (ModelBovin m : new ServiceBovin().afficherBovinCommander()) {
+            bodyc[i][0] = m.getCodeBovin();
+            bodyc[i][1] = m.getNom();
+            bodyc[i][2] = m.getDateNaissance();
+            bodyc[i][3] = m.getPrix();
+            bodyc[i][4] = m.getDescription();
+            bodyc[i][5] = m.getNomRace();
+            i++;
+        }
+        tableCommander.setModel(new DefaultTableModel(bodyc, header));
+    }
 
     public void data() {
 
@@ -116,6 +139,28 @@ public class Production extends javax.swing.JPanel {
 
     }
 
+    public void validerCommande() {
+        int row = tableCommander.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            String id = (String) bodyc[row][1];
+            System.out.println(id);
+            int sup = JOptionPane.showConfirmDialog(null,
+                    "Voulez-vous vraiment Valider cette commande ?", "Confirmation commande",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (sup == 0) {
+                try {
+                    int ids = service.recupererCodeBovin(id);
+                    service.updateSituationtBovin(ids, "vendu");
+                    JOptionPane.showMessageDialog(null, "Bovin vendu!!!");
+                } catch (SQLException ex) {
+                    Logger.getLogger(Production.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -133,6 +178,10 @@ public class Production extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tableVendu = new sn.ferme.swing.TableColumn();
         jLabel4 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableCommander = new sn.ferme.swing.TableColumn();
+        jLabel5 = new javax.swing.JLabel();
+        btnValiderCommande = new javax.swing.JButton();
 
         jScrollPane1.setBackground(new java.awt.Color(245, 245, 245));
         jScrollPane1.setBorder(null);
@@ -212,6 +261,32 @@ public class Production extends javax.swing.JPanel {
         jLabel4.setText("Liste Bovin Vendu");
         jLabel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
+        jScrollPane4.setBackground(new java.awt.Color(245, 245, 245));
+        jScrollPane4.setBorder(null);
+
+        tableCommander.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane4.setViewportView(tableCommander);
+
+        jLabel5.setFont(new java.awt.Font("sansserif", 1, 20)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(79, 79, 79));
+        jLabel5.setText("Liste Bovin Commander");
+        jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
+
+        btnValiderCommande.setBackground(new java.awt.Color(0, 153, 0));
+        btnValiderCommande.setText("Valider Commande");
+        btnValiderCommande.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnValiderCommandeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -219,29 +294,34 @@ public class Production extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
+                        .addComponent(btnLigne, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(204, 204, 204)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 717, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
-                                .addComponent(btnLigne, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 643, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbNombre1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEnlever, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap())
+                                .addComponent(btnEnlever, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnValiderCommande)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +333,7 @@ public class Production extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnLigne, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnEnlever, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnEnlever, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(lbNombre1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -263,10 +343,15 @@ public class Production extends javax.swing.JPanel {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel4)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnValiderCommande, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -278,19 +363,27 @@ public class Production extends javax.swing.JPanel {
         enleverEnligne();        // TODO add your handling code here:
     }//GEN-LAST:event_btnEnleverActionPerformed
 
+    private void btnValiderCommandeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnValiderCommandeActionPerformed
+        validerCommande();    // TODO add your handling code here:
+    }//GEN-LAST:event_btnValiderCommandeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEnlever;
     private javax.swing.JButton btnLigne;
+    private javax.swing.JButton btnValiderCommande;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel lbNombre;
     private javax.swing.JLabel lbNombre1;
     private sn.ferme.swing.TableColumn table;
     private sn.ferme.swing.TableColumn table1;
+    private sn.ferme.swing.TableColumn tableCommander;
     private sn.ferme.swing.TableColumn tableVendu;
     // End of variables declaration//GEN-END:variables
 }

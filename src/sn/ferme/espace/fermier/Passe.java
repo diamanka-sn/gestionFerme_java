@@ -191,6 +191,8 @@ public class Passe extends javax.swing.JPanel {
                 .addGap(28, 28, 28))
         );
 
+        panelModifier.setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout panelModifierLayout = new javax.swing.GroupLayout(panelModifier);
         panelModifier.setLayout(panelModifierLayout);
         panelModifierLayout.setHorizontalGroup(
@@ -228,7 +230,7 @@ public class Passe extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifierActionPerformed
-        showMessage(new ModifierInfos());
+        showMessage(new ModifierInfos(user));
         // TODO add your handling code here:
     }//GEN-LAST:event_btnModifierActionPerformed
 

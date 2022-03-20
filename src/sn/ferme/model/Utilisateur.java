@@ -20,6 +20,50 @@ public class Utilisateur {
     private String profile;
     private boolean isAdmin;
 
+    private int idCom;
+    private int capacite;
+    private String dateCom;
+
+    public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String photo, String email, String password, String profile, boolean isAdmin, int idCom, int capacite, String dateCom) {
+        this.idUtilisateur = idUtilisateur;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.telephone = telephone;
+        this.adresse = adresse;
+        this.photo = photo;
+        this.email = email;
+        this.password = password;
+        this.profile = profile;
+        this.isAdmin = isAdmin;
+        this.idCom = idCom;
+        this.capacite = capacite;
+        this.dateCom = dateCom;
+    }
+
+    public int getIdCom() {
+        return idCom;
+    }
+
+    public void setIdCom(int idCom) {
+        this.idCom = idCom;
+    }
+
+    public int getCapacite() {
+        return capacite;
+    }
+
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
+    }
+
+    public String getDateCom() {
+        return dateCom;
+    }
+
+    public void setDateCom(String dateCom) {
+        this.dateCom = dateCom;
+    }
+    
     public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String email, String password, String profile, boolean isAdmin) {
         this.idUtilisateur = idUtilisateur;
         this.nom = nom;
