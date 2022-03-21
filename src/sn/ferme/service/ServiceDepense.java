@@ -52,7 +52,7 @@ public class ServiceDepense {
         p.setInt(6, depense.getQuantite());
 
         int rs = p.executeUpdate();
-      
+
         return rs;
     }
 
@@ -169,7 +169,7 @@ public class ServiceDepense {
             PreparedStatement ps = con.prepareStatement(select);
             ps.setString(1, "Achat aliment");
             ResultSet rs = ps.executeQuery();
-          
+
             while (rs.next()) {
                 ModelDepense depense = new ModelDepense();
 
@@ -187,7 +187,7 @@ public class ServiceDepense {
         return niveauStock;
     }
 
-    public void insertAliment(ModelDepense depense) throws SQLException {
+    public int insertAliment(ModelDepense depense) throws SQLException {
         PreparedStatement p = con.prepareStatement("insert into alimentationdujour values (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         p.setInt(1, 0);
         p.setInt(2, depense.getIdUtilisateur());
@@ -195,7 +195,18 @@ public class ServiceDepense {
         p.setInt(4, depense.getQuantite());
         p.setString(5, depense.getDate());
 
-        p.executeUpdate();
-        p.close();
+        int rs = p.executeUpdate();
+        return rs;
+    }
+
+    public int TotalDepense() throws SQLException {
+        int nb = 0;
+        PreparedStatement p = con.prepareStatement("SELECT sum(montant) as montant FROM `depenses`");
+        ResultSet r = p.executeQuery();
+        if (r.first()) {
+            nb = r.getInt("montant");
+        }
+
+        return nb;
     }
 }

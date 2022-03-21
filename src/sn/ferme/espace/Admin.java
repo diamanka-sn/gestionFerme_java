@@ -22,24 +22,25 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
 import sn.ferme.espace.admin.Bovin;
 import sn.ferme.espace.admin.Employe;
 import sn.ferme.espace.admin.Production;
+import sn.ferme.espace.admin.espace_achat;
 import sn.ferme.main.Main;
 import sn.ferme.model.Utilisateur;
 
 public class Admin extends javax.swing.JFrame {
-
+    
     private Menu menu = new Menu();
     private JPanel main = new JPanel();
     private MigLayout layout;
     private Animator animator;
     private boolean menuShow;
-
+    
     public Admin(Utilisateur user) {
         initComponents();
         menu.bottom.setLabelNom(user.getPrenom() + " " + user.getNom().toUpperCase());
         menu.bottom.setProfile(user.getProfile().toUpperCase());
         init(user);
     }
-
+    
     private void init(Utilisateur user) {
         layout = new MigLayout("fill", "0[]10[]5", "0[fill]0");
         body.setLayout(layout);
@@ -52,7 +53,7 @@ public class Admin extends javax.swing.JFrame {
                 if (confirme == 0) {
                     logout();
                 }
-
+                
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -74,6 +75,8 @@ public class Admin extends javax.swing.JFrame {
                     showForm(new Production());
                 } else if (index == 3) {
                     showForm(new Employe());
+                } else if (index == 5) {
+                    showForm(new espace_achat(user));
                 } else {
                     showForm(new Bovin(user));
                 }
@@ -84,7 +87,7 @@ public class Admin extends javax.swing.JFrame {
         menu.addMenu(new ModelMenu("Production", new ImageIcon(getClass().getResource("/sn/ferme/icon/v.png"))));
         menu.addMenu(new ModelMenu("Employé", new ImageIcon(getClass().getResource("/sn/ferme/icon/em.png"))));
         menu.addMenu(new ModelMenu("Bovin", new ImageIcon(getClass().getResource("/sn/ferme/icon/bv.png"))));
-        menu.addMenu(new ModelMenu("Statistique", new ImageIcon(getClass().getResource("/sn/ferme/icon/t.png"))));
+        menu.addMenu(new ModelMenu("Commande", new ImageIcon(getClass().getResource("/sn/ferme/espace/client/a.png"))));
 
         //menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");
@@ -103,7 +106,7 @@ public class Admin extends javax.swing.JFrame {
                 layout.setComponentConstraints(menu, "w " + width + "!");
                 body.revalidate();
             }
-
+            
             @Override
             public void end() {
                 menuShow = !menuShow;
@@ -115,19 +118,19 @@ public class Admin extends javax.swing.JFrame {
         animator.setDeceleration(0.5f);
         showForm(new Accueil());
     }
-
+    
     private void showForm(Component com) {
         main.removeAll();
         main.add(com);
         main.repaint();
         main.revalidate();
     }
-
+    
     private void logout() {
         this.dispose();
         new Main().setVisible(true);
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

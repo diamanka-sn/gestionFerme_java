@@ -30,34 +30,39 @@ public class ServiceBovin {
     Date dactuelle = new Date();
 
     private final Connection con;
-    ArrayList<ModelBovin> listeBovin = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinPasEnVente = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinEnVente = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinVivant = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> detailsBovin = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinAcheter = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinVendu = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listepesage = new ArrayList<ModelBovin>();
+    ArrayList<ModelBovin> listeBovin = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinPasEnVente = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinEnVente = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinVivant = new ArrayList<>();
+    ArrayList<ModelBovin> detailsBovin = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinAcheter = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinVendu = new ArrayList<>();
+    ArrayList<ModelBovin> listepesage = new ArrayList<>();
+    ArrayList<ModelBovin> listeEncoursdeCommande = new ArrayList<>();
+    ArrayList<ModelBovin> listeEncoursdeCommandeU = new ArrayList<>();
+    ArrayList<ModelBovin> vache = new ArrayList<>();
 
     // ArrayList<ModelBovin> listeB = new ArrayList<>();
     HashMap<String, ModelBovin> etatFerme = new HashMap<>();
     HashMap<Integer, ModelBovin> listePoidsParbovin = new HashMap<>();
 
     HashMap<String, ModelBovin> etatSanteFerme = new HashMap<>();
+    HashMap<String, Integer> vacheParperiode = new HashMap<>();
+    HashMap<String, Integer> vacheParphase = new HashMap<>();
 
-    ArrayList<ModelBovin> listeBovinLactation = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinTarissement = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinMalade = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinPese = new ArrayList<ModelBovin>();
-    ArrayList<ModelBovin> listeBovinCommander = new ArrayList<ModelBovin>();
+    ArrayList<ModelBovin> listeBovinLactation = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinTarissement = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinMalade = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinPese = new ArrayList<>();
+    ArrayList<ModelBovin> listeBovinCommander = new ArrayList<>();
 
-    ArrayList<String> listeRace = new ArrayList<String>();
-    ArrayList<String> listeGeniteur = new ArrayList<String>();
-    ArrayList<String> listeGenitrice = new ArrayList<String>();
-    ArrayList<String> listeBovinNonPese = new ArrayList<String>();
-    ArrayList<String> listeBovinSain = new ArrayList<String>();
+    ArrayList<String> listeRace = new ArrayList<>();
+    ArrayList<String> listeGeniteur = new ArrayList<>();
+    ArrayList<String> listeGenitrice = new ArrayList<>();
+    ArrayList<String> listeBovinNonPese = new ArrayList<>();
+    ArrayList<String> listeBovinSain = new ArrayList<>();
 
-    // HashMap<String, ModelBovin> listeBovinLactation = new HashMap<>();
+    //HashMap<String, ModelBovin> listeBovinLactation = new HashMap<>();
     //HashMap<String, ModelBovin> listeBovinTarissement = new HashMap<>();
     public ServiceBovin() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -281,6 +286,14 @@ public class ServiceBovin {
     public void updateEtatBovin(int id, String code) throws SQLException {
         PreparedStatement p = con.prepareStatement("UPDATE `bovin` SET etatSante =? WHERE idBovin=? limit 1");
         p.setString(1, code);
+        p.setInt(2, id);
+
+        p.execute();
+    }
+
+    public void updateBovinEtat(int id) throws SQLException {
+        PreparedStatement p = con.prepareStatement("UPDATE `bovin` SET etat =? WHERE idBovin=? limit 1");
+        p.setString(1, "Mort");
         p.setInt(2, id);
 
         p.execute();
@@ -656,6 +669,16 @@ public class ServiceBovin {
         return status;
     }
 
+    public void supprimerVenteBovin(int id) {
+        try {
+            PreparedStatement p = con.prepareStatement("Delete from ventebovin where idBovin=? limit 1", PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, id);
+            p.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceBovin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public int insererVenteLait(ModelBovin bovin) throws SQLException {
         PreparedStatement p = con.prepareStatement("insert into ventelait values (?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -667,6 +690,19 @@ public class ServiceBovin {
         return status;
     }
 
+    public void supprimerVenteLait(int comm) throws SQLException {
+        PreparedStatement p = con.prepareStatement("delete from ventelait where idCom=? limit 1 ");
+        p.setInt(1, comm);
+        p.execute();
+
+    }
+
+    public void supprimerCommande(int id) throws SQLException {
+        PreparedStatement p = con.prepareStatement("delete from commande where idCom=? limit 1");
+        p.setInt(1, id);
+        p.execute();
+    }
+
     public void updateSituationtBovin(int id, String code) throws SQLException {
         PreparedStatement p = con.prepareStatement("UPDATE `bovin` SET situation =? WHERE idBovin=? limit 1");
         p.setString(1, code);
@@ -676,7 +712,7 @@ public class ServiceBovin {
     }
 
     public ArrayList<ModelBovin> afficherBovinCommander() {
-        String select = "SELECT * FROM `bovin`, `race` WHERE `race`.`idRace`=bovin.idRace and etat='Vivant' and situation='commander'";
+        String select = "SELECT * FROM `commande`,race,bovin,utilisateur,ventebovin WHERE `race`.`idRace`=bovin.idRace and etat='Vivant' and situation='commander' and ventebovin.idBovin=bovin.idBovin and commande.idCom=ventebovin.idCom and utilisateur.idUtilisateur=commande.idUtilisateur";
 
         try {
             PreparedStatement ps = con.prepareStatement(select);
@@ -694,6 +730,8 @@ public class ServiceBovin {
                 bovin.setPrix(rs.getInt("prix"));
                 bovin.setDescription(rs.getString("description"));
                 bovin.setNomRace(rs.getString("nomRace"));
+                bovin.setTelephone(rs.getString("telephone"));
+                bovin.setPrenom(rs.getString("prenom"));
                 listeBovinCommander.add(bovin);
             }
         } catch (SQLException e) {
@@ -731,4 +769,193 @@ public class ServiceBovin {
         }
         return listePoidsParbovin;
     }
+
+    public int nombrePanier(int code, String etat) throws SQLException {
+        int r = 0;
+        PreparedStatement p = con.prepareStatement("SELECT count(commande.idCom) as panier FROM `commande`,bovin,utilisateur,ventebovin WHERE commande.idCom=ventebovin.idCom and ventebovin.idBovin=bovin.idBovin and utilisateur.idUtilisateur=commande.idUtilisateur and bovin.situation=? and utilisateur.idUtilisateur=?");
+        p.setString(1, etat);
+        p.setInt(2, code);
+        ResultSet rs = p.executeQuery();
+        if (rs.first()) {
+            r = rs.getInt("panier");
+        }
+
+        return r;
+    }
+
+    public ArrayList<ModelBovin> BovinEnCoursCommande(int code, String etat) {
+        try {
+            int r = 0;
+            PreparedStatement p = con.prepareStatement("SELECT bovin.idBovin,codeBovin,bovin.nom,description,nomRace, dateCom,prix FROM `commande`,race,bovin,utilisateur,ventebovin WHERE commande.idCom=ventebovin.idCom and bovin.idRace=race.idRace and ventebovin.idBovin=bovin.idBovin and utilisateur.idUtilisateur=commande.idUtilisateur and bovin.situation=? and utilisateur.idUtilisateur=?");
+            p.setString(1, etat);
+            p.setInt(2, code);
+
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                ModelBovin bovin = new ModelBovin();
+                bovin.setIdBovin(rs.getInt("idBovin"));
+                bovin.setCodeBovin(rs.getString("codeBovin"));
+                bovin.setNom(rs.getString("nom"));
+                bovin.setDateCom(rs.getString("dateCom"));
+                bovin.setPrix(rs.getInt("prix"));
+                bovin.setDescription(rs.getString("description"));
+                bovin.setNomRace(rs.getString("nomRace"));
+                listeEncoursdeCommande.add(bovin);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceBovin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listeEncoursdeCommande;
+    }
+
+    public ArrayList<ModelBovin> ClientEnCoursCommande(String etat) {
+        try {
+            int r = 0;
+            PreparedStatement p = con.prepareStatement("SELECT bovin.idBovin,codeBovin,bovin.nom,description,nomRace, dateCom,prix,utilisateur.nom as client,utilisateur.prenom,utilisateur.telephone,utilisateur.email FROM `commande`,race,bovin,utilisateur,ventebovin WHERE commande.idCom=ventebovin.idCom and bovin.idRace=race.idRace and ventebovin.idBovin=bovin.idBovin and utilisateur.idUtilisateur=commande.idUtilisateur and bovin.situation=?");
+            p.setString(1, etat);
+
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                ModelBovin bovin = new ModelBovin();
+                bovin.setIdBovin(rs.getInt("idBovin"));
+                bovin.setCodeBovin(rs.getString("codeBovin"));
+                bovin.setNom(rs.getString("nom"));
+                bovin.setDateCom(rs.getString("dateCom"));
+                bovin.setPrix(rs.getInt("prix"));
+                bovin.setDescription(rs.getString("description"));
+                bovin.setNomRace(rs.getString("nomRace"));
+                bovin.setNomClient(rs.getString("client"));
+                bovin.setPrenom(rs.getString("prenom"));
+                bovin.setEmail(rs.getString("email"));
+                bovin.setTelephone(rs.getString("telephone"));
+                listeEncoursdeCommandeU.add(bovin);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceBovin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listeEncoursdeCommandeU;
+    }
+
+    public int caBovin(String b) throws SQLException {
+        int r = 0;
+        PreparedStatement p = con.prepareStatement("SELECT sum(ventebovin.prixBovin) as ca FROM `commande`,bovin,ventebovin WHERE commande.idCom=ventebovin.idCom and ventebovin.idBovin=bovin.idBovin and bovin.situation=?");
+        p.setString(1, b);
+        ResultSet rs = p.executeQuery();
+        if (rs.first()) {
+            r = rs.getInt("ca");
+        }
+
+        return r;
+    }
+
+    public int coutAchatBovin() throws SQLException {
+        int nb = 0;
+        PreparedStatement p = con.prepareStatement("SELECT sum(montantBovin) as montantBovin FROM `achatbovin`");
+        ResultSet r = p.executeQuery();
+        if (r.first()) {
+            nb = r.getInt("montantBovin");
+        }
+
+        return nb;
+    }
+
+    public HashMap<String, Integer> vachePeriode() throws SQLException {
+        String select = "SELECT periode, count(vache.idBovin) as nombre FROM `vache`,bovin WHERE vache.idBovin=bovin.idBovin and bovin.etat=? and bovin.situation!=? GROUP BY periode";
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setString(1, "Vivant");
+            ps.setString(2, "vendu");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ModelBovin depense = new ModelBovin();
+
+                depense.setDescription(rs.getString("periode"));
+                depense.setNombre(rs.getInt("nombre"));
+
+                vacheParperiode.put(depense.getDescription(), depense.getNombre());
+
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return vacheParperiode;
+    }
+
+    public HashMap<String, Integer> vachePhase() throws SQLException {
+        String select = "SELECT phase, count(vache.idBovin) as nombre FROM `vache`,bovin WHERE vache.idBovin=bovin.idBovin and bovin.etat=? and bovin.situation!=? GROUP BY phase";
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setString(1, "Vivant");
+            ps.setString(2, "vendu");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ModelBovin depense = new ModelBovin();
+
+                depense.setDescription(rs.getString("phase"));
+                depense.setNombre(rs.getInt("nombre"));
+
+                vacheParphase.put(depense.getDescription(), depense.getNombre());
+
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return vacheParphase;
+    }
+
+    public void updatePrix(int code, int phase) throws SQLException {
+        PreparedStatement p = con.prepareStatement("UPDATE `bovin` SET prix =? WHERE idBovin=? limit 1");
+        p.setInt(1, phase);
+        p.setInt(2, code);
+
+        p.execute();
+    }
+
+    public ArrayList<ModelBovin> afficherBovinPeriode(int id) {
+        String select = "SELECT periode,phase FROM `bovin`, `vache` WHERE `vache`.`idBovin`=bovin.idBovin and bovin.idBovin=? limit 1";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.first()) {
+                ModelBovin bovin = new ModelBovin();
+                bovin.setPeriode(rs.getString("periode"));
+                bovin.setPhase(rs.getString("phase"));
+
+                vache.add(bovin);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return vache;
+    }
+
+    public void updatePhase(int code, String phase) throws SQLException {
+        PreparedStatement p = con.prepareStatement("UPDATE `vache` SET phase =? WHERE idBovin=? limit 1");
+        p.setString(1, phase);
+        p.setInt(2, code);
+
+        p.execute();
+    }
+
+    public String recupererPhase(int code) throws SQLException {
+        String nb = "";
+        PreparedStatement p = con.prepareStatement("SELECT phase FROM `vache` where idBovin=? limit 1");
+        p.setInt(1, code);
+        ResultSet r = p.executeQuery();
+        if (r.first()) {
+            nb = r.getString("phase");
+        }
+
+        return nb;
+    }
+
 }

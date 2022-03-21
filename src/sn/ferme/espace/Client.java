@@ -19,6 +19,8 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import sn.ferme.espace.client.AccueilClient;
+import sn.ferme.espace.client.AcheterLait;
+import sn.ferme.espace.client.PanierClient;
 
 import sn.ferme.main.Main;
 import sn.ferme.model.Utilisateur;
@@ -41,6 +43,7 @@ public class Client extends javax.swing.JFrame {
     }
 
     private void init() {
+        System.out.println(user.getIdUtilisateur());
         layout = new MigLayout("fill", "0[]10[]5", "0[fill]0");
         body.setLayout(layout);
         main.setOpaque(false);
@@ -52,7 +55,6 @@ public class Client extends javax.swing.JFrame {
                 if (confirme == 0) {
                     logout();
                 }
-
             }
         });
         menu.addEventMenu(new ActionListener() {
@@ -68,12 +70,17 @@ public class Client extends javax.swing.JFrame {
             public void selected(int index) {
                 if (index == 0) {
                     showForm(new AccueilClient(user));
+                } else if(index == 1){
+                    showForm(new PanierClient(user));
+                } else if(index==2){
+                    showForm(new AcheterLait(user));
                 }
             }
         });
         menu.addMenu(new ModelMenu("Accueil", new ImageIcon(getClass().getResource("/sn/ferme/icon/home.png"))));
-        menu.addMenu(new ModelMenu("Acheter", new ImageIcon(getClass().getResource("/sn/ferme/icon/al.png"))));
-        menu.addMenu(new ModelMenu("Panier", new ImageIcon(getClass().getResource("/sn/ferme/icon/bn.png"))));
+        menu.addMenu(new ModelMenu("Panier", new ImageIcon(getClass().getResource("/sn/ferme/icon/cartnonvide.png"))));
+        menu.addMenu(new ModelMenu("Achater lait", new ImageIcon(getClass().getResource("/sn/ferme/icon/lait.png"))));
+        menu.addMenu(new ModelMenu("Historique achats", new ImageIcon(getClass().getResource("/sn/ferme/icon/history.png"))));
 
         // menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         body.add(menu, "w 50!");

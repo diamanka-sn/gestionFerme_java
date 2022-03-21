@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -76,7 +76,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="btnAjouterTraite" alignment="1" pref="266" max="32767" attributes="0"/>
+                      <Component id="btnAjouterAliment" alignment="1" pref="266" max="32767" attributes="0"/>
                       <Component id="datechooser" alignment="1" max="32767" attributes="0"/>
                       <Component id="Lb_quantite" alignment="0" max="32767" attributes="0"/>
                       <Component id="ComboAlimentation" alignment="1" max="32767" attributes="0"/>
@@ -95,7 +95,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="datechooser" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
-                  <Component id="btnAjouterTraite" pref="33" max="32767" attributes="0"/>
+                  <Component id="btnAjouterAliment" pref="33" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -119,12 +119,12 @@
             <Property name="text" type="java.lang.String" value="Quantit&#xe9;"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnAjouterTraite">
+        <Component class="javax.swing.JButton" name="btnAjouterAliment">
           <Properties>
             <Property name="text" type="java.lang.String" value="Ajouter alimentation du jour"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAjouterTraiteActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAjouterAlimentActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

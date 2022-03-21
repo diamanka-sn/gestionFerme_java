@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -134,12 +135,14 @@ public class Main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR, "Adresse email existe déja!!");
             } else if (!v.verifNom(user.getNom())) {
                 showMessage(Message.MessageType.ERROR, "Le nom est invalide");
-            } else if (!v.validerMotPasse(user.getPassword())) {
-                showMessage(Message.MessageType.ERROR, "Mot de passe invalide");
+            } else if (!v.validerTelephone(user.getTelephone())) {
+                showMessage(Message.MessageType.ERROR, "Le numero de telephone est invalide");
             } else {
                 service.insertUser(user);
-                this.dispose();
-                Client.main(user);
+                /*   this.dispose();
+                Client.main(user);*/
+                //  showMessage(Message.MessageType.SUCCESS, "Veuillez Vous entrez vos identifiants af");
+                JOptionPane.showMessageDialog(null, "Veuillez entrez vos identifiants dans la partie connexion");
             }
             //sendMain(user);
         } catch (SQLException e) {
@@ -148,6 +151,9 @@ public class Main extends javax.swing.JFrame {
         }
     }
 
+    /*else if (!v.validerMotPasse(user.getPassword())) {
+                showMessage(Message.MessageType.ERROR, "Mot de passe invalide");
+            } */
     private void login() {
         ModelLogin data = loginAndRegister.getDataLogin();
         loading.setVisible(true);

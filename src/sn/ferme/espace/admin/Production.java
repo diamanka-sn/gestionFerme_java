@@ -25,7 +25,7 @@ public class Production extends javax.swing.JPanel {
         dataCommander();
     }
     Object body[][] = new Object[service.afficherBovinNonEnLigne().size()][6];
-    Object bodyc[][] = new Object[service.afficherBovinCommander().size()][6];
+    Object bodyc[][] = new Object[service.afficherBovinCommander().size()][7];
 
     public void dataCommander() {
 
@@ -38,6 +38,7 @@ public class Production extends javax.swing.JPanel {
             bodyc[i][3] = m.getPrix();
             bodyc[i][4] = m.getDescription();
             bodyc[i][5] = m.getNomRace();
+            bodyc[i][6] = m.getPrenom() + "-"+m.getTelephone();
             i++;
         }
         tableCommander.setModel(new DefaultTableModel(bodyc, header));
@@ -280,7 +281,7 @@ public class Production extends javax.swing.JPanel {
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
         btnValiderCommande.setBackground(new java.awt.Color(0, 153, 0));
-        btnValiderCommande.setText("Valider Commande");
+        btnValiderCommande.setText("Vendre le bovin");
         btnValiderCommande.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnValiderCommandeActionPerformed(evt);

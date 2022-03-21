@@ -32,10 +32,12 @@ public class FormHome extends javax.swing.JPanel {
 
     private EventItem event;
     ModelItem data;
-Utilisateur user;
+    Utilisateur user;
+
     public FormHome(Utilisateur user) {
         this.data = data;
         this.user = user;
+
         initComponents();
         scroll.setVerticalScrollBar(new ScrollBar());
     }
@@ -91,7 +93,7 @@ Utilisateur user;
         lbBrand = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         txtDescription = new javax.swing.JTextPane();
-        jButton1 = new javax.swing.JButton();
+        btnPanier = new javax.swing.JButton();
 
         setOpaque(false);
 
@@ -118,13 +120,13 @@ Utilisateur user;
         txtDescription.setForeground(new java.awt.Color(178, 178, 178));
         txtDescription.setFocusable(false);
 
-        jButton1.setBackground(new java.awt.Color(255, 102, 0));
-        jButton1.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Commander");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnPanier.setBackground(new java.awt.Color(255, 102, 0));
+        btnPanier.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        btnPanier.setForeground(new java.awt.Color(255, 255, 255));
+        btnPanier.setText("Ajouter au panier");
+        btnPanier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnPanierActionPerformed(evt);
             }
         });
 
@@ -148,7 +150,7 @@ Utilisateur user;
                         .addGap(10, 10, 10))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPanier)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -165,7 +167,7 @@ Utilisateur user;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnPanier, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -185,7 +187,7 @@ Utilisateur user;
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnPanierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPanierActionPerformed
         try {
             String dc = dchoixAliment.format(dactuelle);
             String tes = lbItemName.getText();
@@ -195,17 +197,18 @@ Utilisateur user;
             int com = service.insererCommande(commande);
             ModelBovin venteBovin = new ModelBovin(com, code, prix);
             int vente = service.insererVenteBovin(venteBovin);
-            if(vente>0) {
-                JOptionPane.showMessageDialog(null, "Commande effectuer avec succes");
-                service.updateSituationtBovin(code, "commander");
+            if (vente > 0) {
+                JOptionPane.showMessageDialog(null, "Commande ajoutée");
+                service.updateSituationtBovin(code, "en cours");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(FormHome.class.getName()).log(Level.SEVERE, null, ex);
+            //  System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Commande déja ajouter");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnPanierActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnPanier;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbBrand;

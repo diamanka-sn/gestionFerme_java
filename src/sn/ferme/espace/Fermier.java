@@ -69,7 +69,7 @@ public class Fermier extends javax.swing.JFrame {
                 if (index == 0) {
                     showForm(new AccueilF());
                 } else if (index == 1) {
-                    showForm(new Alimentation());
+                    showForm(new Alimentation(user));
                 } else if (index == 2) {
                     showForm(new ProductionF(user));
                 } else if (index == 3) {

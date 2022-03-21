@@ -41,13 +41,60 @@ public class ModelBovin {
 
     private String maladie;
     private String dateMaladie;
-    
+
     private int nombre;
     private int mois;
     private int idCom;
     private String dateCom;
 
-    public ModelBovin(int mois,double poids) {
+    private String nomClient;
+    private String prenom;
+    private String telephone;
+    private String adresse;
+  
+    private String email;
+
+    public String getNomClient() {
+        return nomClient;
+    }
+
+    public void setNomClient(String nomClient) {
+        this.nomClient = nomClient;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getAdresse() {
+        return adresse;
+    }
+
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public ModelBovin(int mois, double poids) {
         this.poids = poids;
         this.mois = mois;
     }
@@ -74,7 +121,7 @@ public class ModelBovin {
         this.idCom = idCom;
         this.capacite = capacite;
     }
-    
+
     public int getIdCom() {
         return idCom;
     }
@@ -87,25 +134,32 @@ public class ModelBovin {
         return dateCom;
     }
 
-    public ModelBovin( int idCom,int idUtilisateur, String dateCom) {
+    public ModelBovin(int idCom, int idUtilisateur, String dateCom) {
         this.idUtilisateur = idUtilisateur;
         this.idCom = idCom;
         this.dateCom = dateCom;
     }
 
-    public ModelBovin( int idCom,int idBovin, int prix) {
+    public ModelBovin(int idCom, int idBovin, int prix) {
         this.idBovin = idBovin;
         this.prix = prix;
         this.idCom = idCom;
     }
 
-    
     public void setDateCom(String dateCom) {
         this.dateCom = dateCom;
     }
-    
-    
-    
+
+    public ModelBovin(int idBovin, String nomRace, String nom, String codeBovin, String description, int prix, String dateCom) {
+        this.idBovin = idBovin;
+        this.nomRace = nomRace;
+        this.nom = nom;
+        this.codeBovin = codeBovin;
+        this.description = description;
+        this.prix = prix;
+        this.dateCom = dateCom;
+    }
+
     public ModelBovin(String description, int nombre) {
         this.description = description;
         this.nombre = nombre;
@@ -118,7 +172,7 @@ public class ModelBovin {
     public void setNombre(int nombre) {
         this.nombre = nombre;
     }
-    
+
     public String getMaladie() {
         return maladie;
     }

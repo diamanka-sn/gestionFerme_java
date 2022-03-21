@@ -134,7 +134,7 @@ public class ServiceTraite {
 
     public int recupererVenduLait() throws SQLException {
         int code = 0;
-        String sql = "SELECT Sum(capacite) as vendu FROM `ventelait` where etat=true";
+        String sql = "SELECT Sum(capacite) as vendu FROM `ventelait`";
         PreparedStatement ps = con.prepareStatement(sql);
 
         ResultSet r = ps.executeQuery();
@@ -143,4 +143,5 @@ public class ServiceTraite {
         }
         return code;
     }
+    
 }

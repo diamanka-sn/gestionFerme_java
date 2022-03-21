@@ -27,12 +27,7 @@
                       </Group>
                       <EmptySpace pref="387" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
-                  <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -46,13 +41,9 @@
               <Component id="formPanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="jScrollPane1" min="-2" pref="206" max="-2" attributes="0"/>
-              <EmptySpace pref="8" max="32767" attributes="0"/>
-              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane2" min="-2" pref="199" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="467" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -142,7 +133,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="txtEmail" min="-2" pref="145" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtEmail1" min="-2" pref="145" max="-2" attributes="0"/>
+                          <Component id="txtSalaire" min="-2" pref="145" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -174,7 +165,7 @@
                       <Component id="txtNom" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtEmail" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtConfirme" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtEmail1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSalaire" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="button1" min="-2" pref="37" max="-2" attributes="0"/>
@@ -212,11 +203,13 @@
         <Component class="sn.ferme.login.swing.MyPasswordField" name="txtPasse">
           <Properties>
             <Property name="text" type="java.lang.String" value="passe"/>
+            <Property name="toolTipText" type="java.lang.String" value="mot de passe"/>
           </Properties>
         </Component>
         <Component class="sn.ferme.login.swing.MyPasswordField" name="txtConfirme">
           <Properties>
             <Property name="text" type="java.lang.String" value="passe"/>
+            <Property name="toolTipText" type="java.lang.String" value="Confirmer mot de passe"/>
           </Properties>
         </Component>
         <Component class="sn.ferme.login.swing.Button" name="button1">
@@ -227,61 +220,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="button1ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="sn.ferme.login.swing.MyTextField" name="txtEmail1">
+        <Component class="sn.ferme.login.swing.MyTextField" name="txtSalaire">
           <Properties>
             <Property name="text" type="java.lang.String" value="Salaire"/>
           </Properties>
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="null"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-      </AuxValues>
-
-      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-      <SubComponents>
-        <Component class="sn.ferme.swing.TableColumn" name="table1">
-          <Properties>
-            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-              <Table columnCount="7" rowCount="0">
-                <Column editable="true" title="id" type="java.lang.Object"/>
-                <Column editable="true" title="Nom complet" type="java.lang.Object"/>
-                <Column editable="true" title="Telephone" type="java.lang.Object"/>
-                <Column editable="true" title="Adresse" type="java.lang.Object"/>
-                <Column editable="true" title="Email" type="java.lang.Object"/>
-                <Column editable="true" title="Etat" type="java.lang.Object"/>
-                <Column editable="false" title="Action" type="java.lang.Object"/>
-              </Table>
-            </Property>
-            <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-              <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-            </Property>
-          </Properties>
-        </Component>
-      </SubComponents>
-    </Container>
-    <Component class="javax.swing.JLabel" name="jLabel3">
-      <Properties>
-        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="sansserif" size="20" style="1"/>
-        </Property>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="4f" green="4f" red="4f" type="rgb"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="Liste employ&#xe9;"/>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-            <EmptyBorder bottom="1" left="10" right="1" top="10"/>
-          </Border>
-        </Property>
-        <Property name="verticalTextPosition" type="int" value="3"/>
-      </Properties>
-    </Component>
   </SubComponents>
 </Form>

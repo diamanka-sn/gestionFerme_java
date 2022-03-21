@@ -21,7 +21,13 @@ public class ModelCard {
         this.titre = titre;
         this.valeur = valeur;
         this.pourcentage = pourcentage;
-     //   this.icone = icone;
+        //   this.icone = icone;
+    }
+
+    public ModelCard(String titre, double valeur) {
+        this.titre = titre;
+        this.valeur = valeur;
+        //   this.icone = icone;
     }
 
     public ModelCard() {
@@ -58,6 +64,5 @@ public class ModelCard {
     public void setIcone(Icon icone) {
         this.icone = icone;
     }
-    
-    
+
 }

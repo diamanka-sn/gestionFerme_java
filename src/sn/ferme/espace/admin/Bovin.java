@@ -28,7 +28,7 @@ import sn.ferme.service.ServiceBovin;
 public class Bovin extends javax.swing.JPanel {
 
     private ServiceBovin service = new ServiceBovin();
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     Date dactuelle = new Date();
     String dA = dchoix.format(dactuelle);
     String date = null;
@@ -45,13 +45,14 @@ public class Bovin extends javax.swing.JPanel {
 
         btnDetails.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnModifier.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnSupprimer.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         try {
             race_choix.setModel(new DefaultComboBoxModel(service.listeRaceExistant().toArray()));
         } catch (SQLException ex) {
             Logger.getLogger(Bovin.class.getName()).log(Level.SEVERE, null, ex);
         }
         txtPrix.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
                 if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
@@ -62,6 +63,32 @@ public class Bovin extends javax.swing.JPanel {
     }
 
     public Bovin() {
+    }
+
+    private void modifierPrix() throws SQLException {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            String id = (String) body[row][1];
+            String profession = JOptionPane.showInputDialog(btnModifier, "Modifier prix",
+                    "Nouvelle prix", JOptionPane.PLAIN_MESSAGE);
+
+            if (profession.equals("")) {
+                JOptionPane.showMessageDialog(btnModifier, "Veuillez saisir le prix!!");
+            } else {
+                int recuperer = service.recupererCodeBovin(id);
+                int sup = JOptionPane.showConfirmDialog(null,
+                        "Veuillez confirmer la modification ?", "Confirmation",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (sup == 0) {
+                    int prix = Integer.parseInt(profession);
+                    service.updatePrix(recuperer, prix);
+                    JOptionPane.showMessageDialog(btnModifier, "Prix modiifier avec success!!");
+                }
+            }
+
+        }
     }
 
     public int verifDate(JDateChooser j) {
@@ -146,11 +173,11 @@ public class Bovin extends javax.swing.JPanel {
         }
 
     }
-    Object body[][] = new Object[service.afficherBovin().size()][9];
+    Object body[][] = new Object[service.afficherBovin().size()][7];
 
     public void data() {
 
-        String[] header = {"Code", "Nom", "Naissance", "Etat santé", "Etat", "Situation", "prix", "Description", "Race"};
+        String[] header = {"Code", "Nom", "Naissance", "Etat santé", "prix", "Description", "Race"};
         int i = 0;
         lbNombre.setText(service.afficherBovin().size() / 2 + " ");
         for (ModelBovin m : new ServiceBovin().afficherBovin()) {
@@ -159,11 +186,11 @@ public class Bovin extends javax.swing.JPanel {
             body[i][2] = m.getDateNaissance();
             body[i][3] = m.getEtatSante();
 
-            body[i][4] = m.getEtat();
-            body[i][5] = m.getSituation();
-            body[i][6] = m.getPrix();
-            body[i][7] = m.getDescription();
-            body[i][8] = m.getNomRace();
+            //  body[i][4] = m.getEtat();
+            // body[i][4] = m.getSituation();
+            body[i][4] = m.getPrix();
+            body[i][5] = m.getDescription();
+            body[i][6] = m.getNomRace();
             i++;
         }
         table.setModel(new DefaultTableModel(body, header));
@@ -224,7 +251,6 @@ public class Bovin extends javax.swing.JPanel {
         txtRace = new sn.ferme.login.swing.MyTextField();
         ajouterRace = new sn.ferme.login.swing.ButtonOutLine();
         detailsBovin = new javax.swing.JPanel();
-        btnSupprimer = new javax.swing.JButton();
         btnModifier = new javax.swing.JButton();
         btnDetails = new javax.swing.JButton();
         lbNombre = new javax.swing.JLabel();
@@ -296,7 +322,7 @@ public class Bovin extends javax.swing.JPanel {
 
         comPeriode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lactation", "Tarrissement" }));
 
-        comPhase.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Gestante", "Non gestante" }));
+        comPhase.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gestant", "non gestant" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -334,7 +360,7 @@ public class Bovin extends javax.swing.JPanel {
                         .addComponent(txtSituation, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(comPeriode, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(40, Short.MAX_VALUE))))
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,24 +427,15 @@ public class Bovin extends javax.swing.JPanel {
         detailsBovin.setLayout(detailsBovinLayout);
         detailsBovinLayout.setHorizontalGroup(
             detailsBovinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 225, Short.MAX_VALUE)
+            .addGap(0, 505, Short.MAX_VALUE)
         );
         detailsBovinLayout.setVerticalGroup(
             detailsBovinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        btnSupprimer.setBackground(new java.awt.Color(204, 0, 0));
-        btnSupprimer.setText("Supprimer");
-        btnSupprimer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnSupprimer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSupprimerActionPerformed(evt);
-            }
-        });
-
         btnModifier.setBackground(new java.awt.Color(0, 153, 0));
-        btnModifier.setText("Modifier");
+        btnModifier.setText("Modifier prix");
         btnModifier.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModifierActionPerformed(evt);
@@ -452,17 +469,16 @@ public class Bovin extends javax.swing.JPanel {
                         .addComponent(btnDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnModifier, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSupprimer, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1)
+                        .addGap(89, 89, 89))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(9, 9, 9)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 652, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)))
+                    .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(detailsBovin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -482,7 +498,6 @@ public class Bovin extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lbNombre, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2)
-                            .addComponent(btnSupprimer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnDetails, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnModifier, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -513,28 +528,12 @@ public class Bovin extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDetailsActionPerformed
 
     private void btnModifierActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifierActionPerformed
-        int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
-        } else {
-            String id = (String) body[row][0];
-            String description = (String) body[row][7];
-            String dateNaiss = (String) body[row][2];
-            String nom = (String) body[row][1];
-            String etatSante = (String) body[row][3];
-            String geniteur = (String) body[row][4];
-            String genitrice = (String) body[row][5];
-            String etat = (String) body[row][6];
-            String situation = (String) body[row][4];
-
-            System.out.println(id);
-            showMessage(new ModifierBovin(id, description));// TODO add your handling code here:
+        try {
+            modifierPrix();
+        } catch (SQLException ex) {
+            Logger.getLogger(Bovin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnModifierActionPerformed
-
-    private void btnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSupprimerActionPerformed
 
     private void sauvegarderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sauvegarderActionPerformed
         enregistrerBovin();// TODO add your handling code here:
@@ -544,7 +543,6 @@ public class Bovin extends javax.swing.JPanel {
     private sn.ferme.login.swing.ButtonOutLine ajouterRace;
     private javax.swing.JButton btnDetails;
     private javax.swing.JButton btnModifier;
-    private javax.swing.JButton btnSupprimer;
     private javax.swing.JComboBox<String> comPeriode;
     private javax.swing.JComboBox<String> comPhase;
     private javax.swing.JPanel detailsBovin;

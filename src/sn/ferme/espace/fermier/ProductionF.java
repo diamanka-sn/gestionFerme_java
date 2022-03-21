@@ -57,10 +57,28 @@ public class ProductionF extends javax.swing.JPanel {
         btnChangerEnTarissement.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChangerPhase2.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChangerPhaseT.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        txtTraiteMatin.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
 
+        txtTraiteSoir.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
     }
 
-    public void init() {
+    private void init() {
         txtTraiteMatin.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
@@ -147,7 +165,7 @@ public class ProductionF extends javax.swing.JPanel {
     }
     Object bodyL[][] = new Object[serviceB.listeBovinLactation().size()][4];
 
-    public void dataLactation() throws SQLException {
+    private void dataLactation() throws SQLException {
 
         String[] header = {"Code", "Nom", "Race", "Phase"};
         int i = 0;
@@ -162,7 +180,7 @@ public class ProductionF extends javax.swing.JPanel {
     }
     Object bodyT[][] = new Object[serviceB.listeBovinTarissement().size()][4];
 
-    public void dataTarissemnt() throws SQLException {
+    private void dataTarissemnt() throws SQLException {
 
         String[] header = {"Code", "Nom", "Race", "Phase"};
         int i = 0;
@@ -195,6 +213,58 @@ public class ProductionF extends javax.swing.JPanel {
                 int code = serviceB.recupererCodeBovin(id);
                 System.out.println(code);
                 serviceB.updatePeriode(code, "tarissement");
+
+            }
+        }
+    }
+
+    public void changerPhaseLactation() throws SQLException {
+        int row = tableLactation.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+
+            // int code = Integer.parseInt(id);
+            //System.out.println(id);
+            int sup = JOptionPane.showConfirmDialog(null,
+                    "Veuillez confirmer le changement de phase ?", "Confirmation",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (sup == 0) {
+
+                String id = (String) bodyL[row][1];
+                int code = serviceB.recupererCodeBovin(id);
+                String phase = serviceB.recupererPhase(code);
+                if (phase.equals("gestant")) {
+                    serviceB.updatePhase(code, "non gestant");
+                } else {
+                    serviceB.updatePhase(code, "gestant");
+                }
+
+            }
+        }
+    }
+
+    public void changerPhaseTarissement() throws SQLException {
+        int row = tableTarissement.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+
+            // int code = Integer.parseInt(id);
+            //System.out.println(id);
+            int sup = JOptionPane.showConfirmDialog(null,
+                    "Veuillez confirmer le changement de phase ?", "Confirmation",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            if (sup == 0) {
+
+                String id = (String) bodyT[row][1];
+                int code = serviceB.recupererCodeBovin(id);
+                String phase = serviceB.recupererPhase(code);
+                if (phase.equals("gestant")) {
+                    serviceB.updatePhase(code, "non gestant");
+                } else {
+                    serviceB.updatePhase(code, "gestant");
+                }
 
             }
         }
@@ -508,11 +578,22 @@ public class ProductionF extends javax.swing.JPanel {
     }//GEN-LAST:event_btnChangerEnLactationActionPerformed
 
     private void btnChangerPhaseTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangerPhaseTActionPerformed
-        // TODO add your handling code here:
+        try {
+            changerPhaseTarissement();
+            JOptionPane.showMessageDialog(null, "Phase modifier!!!");// TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductionF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnChangerPhaseTActionPerformed
 
     private void btnChangerPhase2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangerPhase2ActionPerformed
-        // TODO add your handling code here:
+        try {
+            changerPhaseLactation();
+            JOptionPane.showMessageDialog(null, "Phase modifier!!!");// TODO add your handling code here:
+// TODO add your handling code here:
+        } catch (SQLException ex) {
+            Logger.getLogger(ProductionF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnChangerPhase2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

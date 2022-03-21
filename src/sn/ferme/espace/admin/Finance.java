@@ -16,15 +16,20 @@ import javax.swing.table.DefaultTableModel;
 import sn.ferme.model.ModelCard;
 import sn.ferme.model.ModelDepense;
 import sn.ferme.model.Utilisateur;
+import sn.ferme.service.ServiceBovin;
 import sn.ferme.service.ServiceDepense;
+import sn.ferme.service.ServiceTraite;
+import sn.ferme.service.ServiceUser;
 import sn.ferme.service.ValiderChamp;
 
 public class Finance extends javax.swing.JPanel {
 
     private ServiceDepense serviced = new ServiceDepense();
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat dchoixAliment = new SimpleDateFormat("yyyy-MM-dd");
-
+    private ServiceBovin serviceb = new ServiceBovin();
+    private ServiceTraite serviceT = new ServiceTraite();
+    private ServiceUser serviceUser = new ServiceUser();
     Date dactuelle = new Date();
     String dA = dchoix.format(dactuelle);
     String date = null;
@@ -40,6 +45,15 @@ public class Finance extends javax.swing.JPanel {
             data();
             comboType.setModel(new DefaultComboBoxModel(serviced.listProfession().toArray()));
             lbMontant.addKeyListener(new KeyAdapter() {
+                public void keyTyped(KeyEvent e) {
+                    char c = e.getKeyChar();
+                    if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
+                        e.consume();
+                    }
+                }
+            });
+            LbQuantite.addKeyListener(new KeyAdapter() {
+                @Override
                 public void keyTyped(KeyEvent e) {
                     char c = e.getKeyChar();
                     if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
@@ -90,11 +104,21 @@ public class Finance extends javax.swing.JPanel {
         return retour;
     }
 
-    public void initFinanceCard() {
-        cardCA.setData(new ModelCard("Chiffre d'affaire(F cfa)", 200000, 20));
-        cardCommande.setData(new ModelCard("Commande", 300000, 20));
-        cardBenefice.setData(new ModelCard("Benefice(F cfa)", 200000, 3));
-        cardDepenseMensuelle.setData(new ModelCard("Total depense(F cfa)", 200000, 20));
+    public void initFinanceCard() throws SQLException {
+        int caBovin = serviceb.caBovin("vendu");
+        int caLait = serviceT.recupererVenduLait() * 1000;
+        int t = caBovin + caLait;
+        int depense = serviced.TotalDepense();
+        int salaire = serviceUser.masseSalariale();
+        int achatBovin = serviceb.coutAchatBovin();
+        int totalDepense = achatBovin + depense;
+        cardCA.setData(new ModelCard("Vente bovin(F cfa)", caBovin, caBovin * 100 / t));
+        cardCommande.setData(new ModelCard("Vente Lait(F cfa)", caLait, caLait * 100 / t));
+        cardDepenseMensuelle.setData(new ModelCard("Total depense(F cfa)", depense, depense * 100 / totalDepense));
+        cardMasseSalariale.setData(new ModelCard("Masse salariale(F cfa)", salaire, salaire * 100 / totalDepense));
+        cardAchatBovin.setData(new ModelCard("Cout achat des bovin(F cfa)", achatBovin, achatBovin * 100 / totalDepense));
+        cardBenefice.setData(new ModelCard("Chiffre d'affaire (F cfa)", t));
+
     }
 
     private void ajouterType() throws SQLException {
@@ -135,15 +159,16 @@ public class Finance extends javax.swing.JPanel {
             ModelDepense depense = new ModelDepense(0, t, date, libelle, m, quantite);
             int aj = serviced.insertDepense(depense);
             if (aj > 0) {
+                if (type.equals("Achat aliment")) {
+                    String dAliment = dchoixAliment.format(jDateChooser1.getDate());
+                    ModelDepense aliment = new ModelDepense(0, user.getIdUtilisateur(), libelle, 0, dAliment);
+                    int r = serviced.insertAliment(aliment);
+                }
                 JOptionPane.showMessageDialog(null, "Depense ajouter avec success");
             } else {
                 JOptionPane.showMessageDialog(null, "Erreur ajout depense", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
-            if (type.equals("Achat aliment")) {
-                String dAliment = dchoixAliment.format(jDateChooser1.getDate());
-                ModelDepense aliment = new ModelDepense(0, user.getIdUtilisateur(), libelle, 0, dAliment);
-                serviced.insertAliment(aliment);
-            }
+
         }
 
     }
@@ -174,6 +199,8 @@ public class Finance extends javax.swing.JPanel {
         table1 = new sn.ferme.swing.TableColumn();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        cardAchatBovin = new sn.ferme.component.Card();
+        cardMasseSalariale = new sn.ferme.component.Card();
 
         cardCA.setColorGradient(new java.awt.Color(0, 0, 102));
 
@@ -313,6 +340,11 @@ public class Finance extends javax.swing.JPanel {
         jLabel4.setText("Ajout type de dépense");
         jLabel4.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 1, 1));
 
+        cardAchatBovin.setBackground(new java.awt.Color(51, 153, 0));
+        cardAchatBovin.setColorGradient(new java.awt.Color(0, 102, 51));
+
+        cardMasseSalariale.setColorGradient(new java.awt.Color(0, 0, 153));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -335,13 +367,19 @@ public class Finance extends javax.swing.JPanel {
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(cardCA, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardDepenseMensuelle, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardCommande, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cardBenefice, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cardCA, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cardDepenseMensuelle, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cardCommande, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cardBenefice, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cardAchatBovin, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cardMasseSalariale, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -372,7 +410,11 @@ public class Finance extends javax.swing.JPanel {
                                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                .addContainerGap(327, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cardAchatBovin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardMasseSalariale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(162, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -396,10 +438,12 @@ public class Finance extends javax.swing.JPanel {
     private javax.swing.JTextField LbQuantite;
     private javax.swing.JButton btnAjouterDepense;
     private javax.swing.JButton btnAjouterType;
+    private sn.ferme.component.Card cardAchatBovin;
     private sn.ferme.component.Card cardBenefice;
     private sn.ferme.component.Card cardCA;
     private sn.ferme.component.Card cardCommande;
     private sn.ferme.component.Card cardDepenseMensuelle;
+    private sn.ferme.component.Card cardMasseSalariale;
     private javax.swing.JComboBox<String> comboType;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel2;

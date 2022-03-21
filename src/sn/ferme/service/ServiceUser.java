@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import sn.ferme.model.Utilisateur;
 
 public class ServiceUser {
@@ -17,6 +19,8 @@ public class ServiceUser {
     ArrayList<Utilisateur> listeEmploye = new ArrayList<Utilisateur>();
     ArrayList<Utilisateur> listeClient = new ArrayList<Utilisateur>();
     ArrayList<Utilisateur> listeCommandeNONValider = new ArrayList<Utilisateur>();
+    ArrayList<Utilisateur> listeCommandeNONValiderU = new ArrayList<Utilisateur>();
+    ArrayList<Utilisateur> listeCommandeValiderU = new ArrayList<Utilisateur>();
 
     public ServiceUser() {
         con = DatabaseConnection.getInstance().getConnection();
@@ -44,7 +48,7 @@ public class ServiceUser {
         return data;
     }
 
-    public void insertUser(Utilisateur user) throws SQLException {
+    public int insertUser(Utilisateur user) throws SQLException {
         PreparedStatement p = con.prepareStatement("insert into utilisateur(idUtilisateur, nom, prenom, telephone, adresse, email, password, profile,isAdmin) values (?,?,?,?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         int id = genererIdentifiant();
         p.setInt(1, id);
@@ -57,12 +61,8 @@ public class ServiceUser {
         p.setString(8, user.getProfile());
         p.setBoolean(9, user.isIsAdmin());
 
-        p.execute();
-        ResultSet r = p.getGeneratedKeys();
-        r.first();
-        //  int userID = r.getInt(1);
-        r.close();
-        p.close();
+        int r = p.executeUpdate();
+        return r;
     }
 
     private int genererIdentifiant() throws SQLException {
@@ -118,6 +118,21 @@ public class ServiceUser {
         return status;
     }
 
+    public int insererFermier(Utilisateur user) {
+        int status = 0;
+        try {
+            PreparedStatement p = con.prepareStatement("insert into fermier(idUtilisateur, salaire) values (?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            p.setInt(1, user.getIdUtilisateur());
+            p.setInt(2, user.getSalire());
+            status = p.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return status;
+
+    }
+
     public int ligne() throws SQLException {
         int nb = 0;
         PreparedStatement p = con.prepareStatement("Select * from Utilisateur");
@@ -129,8 +144,20 @@ public class ServiceUser {
         return nb;
     }
 
+    public int recupereridUser(String email) throws SQLException {
+        int nb = 0;
+        PreparedStatement p = con.prepareStatement("Select idUtilisateur from utilisateur where email=? limit 1");
+        p.setString(1, email);
+        ResultSet r = p.executeQuery();
+        if (r.last()) {
+            nb = r.getInt("idUtilisateur");
+        }
+
+        return nb;
+    }
+
     public ArrayList<Utilisateur> afficherEmploye() {
-        String select = "SELECT * FROM utilisateur where profile!='client' and profile!='employe simple'";
+        String select = "SELECT * FROM utilisateur where profile='fermier'";
 
         try {
             PreparedStatement ps = con.prepareStatement(select);
@@ -228,13 +255,81 @@ public class ServiceUser {
         return listeCommandeNONValider;
     }
 
+    public ArrayList<Utilisateur> afficherCommandeNONValiderLAitU(int id) {
+        String select = "SELECT * FROM `ventelait`,commande,utilisateur WHERE utilisateur.idUtilisateur=commande.idUtilisateur and commande.idCom=ventelait.idCom AND utilisateur.profile='client' and ventelait.etat=false and utilisateur.idUtilisateur=?";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur employe = new Utilisateur();
+                employe.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                employe.setNom(rs.getString("nom"));
+                employe.setPrenom(rs.getString("prenom"));
+                employe.setEmail(rs.getString("email"));
+                employe.setTelephone(rs.getString("telephone"));
+                employe.setAdresse(rs.getString("adresse"));
+                employe.setProfile(rs.getString("profile"));
+                employe.setIsAdmin(rs.getBoolean("isAdmin"));
+                employe.setCapacite(rs.getInt("capacite"));
+                employe.setDateCom(rs.getString("dateCom"));
+                employe.setIdCom(rs.getInt("idCom"));
+                listeCommandeNONValiderU.add(employe);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return listeCommandeNONValiderU;
+    }
+
+    public ArrayList<Utilisateur> afficherCommandeValiderLAitU(int id) {
+        String select = "SELECT * FROM `ventelait`,commande,utilisateur WHERE utilisateur.idUtilisateur=commande.idUtilisateur and commande.idCom=ventelait.idCom AND utilisateur.profile='client' and ventelait.etat=true and utilisateur.idUtilisateur=?";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(select);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Utilisateur employe = new Utilisateur();
+                employe.setIdUtilisateur(rs.getInt("idUtilisateur"));
+                employe.setNom(rs.getString("nom"));
+                employe.setPrenom(rs.getString("prenom"));
+                employe.setEmail(rs.getString("email"));
+                employe.setTelephone(rs.getString("telephone"));
+                employe.setAdresse(rs.getString("adresse"));
+                employe.setProfile(rs.getString("profile"));
+                employe.setIsAdmin(rs.getBoolean("isAdmin"));
+                employe.setCapacite(rs.getInt("capacite"));
+                employe.setDateCom(rs.getString("dateCom"));
+                employe.setIdCom(rs.getInt("idCom"));
+                listeCommandeValiderU.add(employe);
+            }
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        return listeCommandeValiderU;
+    }
+
     public void UpdateCommandeLAit(int idCom) throws SQLException {
         String sql = "UPDATE `ventelait` SET etat=? WHERE idCom=?  limit 1";
         PreparedStatement ps = con.prepareStatement(sql);
         ps.setBoolean(1, true);
         ps.setInt(2, idCom);
-      
 
         ps.execute();
+    }
+
+    public int masseSalariale() throws SQLException {
+        int nb = 0;
+        PreparedStatement p = con.prepareStatement("SELECT sum(salaire) as montant FROM `fermier`");
+        ResultSet r = p.executeQuery();
+        if (r.first()) {
+            nb = r.getInt("montant");
+        }
+
+        return nb;
     }
 }

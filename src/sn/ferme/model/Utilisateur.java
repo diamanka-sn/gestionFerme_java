@@ -20,9 +20,26 @@ public class Utilisateur {
     private String profile;
     private boolean isAdmin;
 
+    private int salire;
+    
     private int idCom;
     private int capacite;
     private String dateCom;
+
+    public int getSalire() {
+        return salire;
+    }
+
+    public Utilisateur(int idUtilisateur, int salire) {
+        this.idUtilisateur = idUtilisateur;
+        this.salire = salire;
+    }
+    
+    
+
+    public void setSalire(int salire) {
+        this.salire = salire;
+    }
 
     public Utilisateur(int idUtilisateur, String nom, String prenom, String telephone, String adresse, String photo, String email, String password, String profile, boolean isAdmin, int idCom, int capacite, String dateCom) {
         this.idUtilisateur = idUtilisateur;

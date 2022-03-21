@@ -10,6 +10,8 @@ import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -56,6 +58,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         MyTextField txtTelephone = new MyTextField();
         txtTelephone.setPrefixIcon(new ImageIcon(getClass().getResource("/sn/ferme/login/icon/user.png")));
         txtTelephone.setHint("Numero télephone");
+        txtTelephone.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
         register.add(txtTelephone, "w 60%");
 
         MyTextField txtAdresse = new MyTextField();
@@ -77,7 +88,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtConfirme.setPrefixIcon(new ImageIcon(getClass().getResource("/sn/ferme/login/icon/pass.png")));
         txtConfirme.setHint("Confirmer mot de passe");
         register.add(txtConfirme, "w 60%");
-        
+
         Button cmd = new Button();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250, 250, 250));
@@ -94,8 +105,8 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 String email = txtEmail.getText();
                 String password = txtPass.getText();
                 String confirme = txtConfirme.getText();
-                
-                user = new Utilisateur(0, nom, prenom, telephone,adresse,email,password,"client",false);
+
+                user = new Utilisateur(0, nom, prenom, telephone, adresse, email, password, "client", false);
             }
         });
     }

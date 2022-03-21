@@ -22,7 +22,7 @@ import sn.ferme.service.ServiceBovin;
 public class BovinF extends javax.swing.JPanel {
 
     private ServiceBovin service = new ServiceBovin();
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat dataPese = new SimpleDateFormat("yyyy-MM-dd");
 
     Date dactuelle = new Date();
@@ -114,6 +114,57 @@ public class BovinF extends javax.swing.JPanel {
         detailsBovin.revalidate();
     }
 
+    public void ajouterNaissance() throws SQLException {
+        String code = null;
+        String nom = txtNom.getText();
+        String geniteur = choix_geniteur.getSelectedItem().toString();
+        String genitrice = choix_genitrice.getSelectedItem().toString();
+        String prix = txtPrix.getText();
+        String race = race_choix.getSelectedItem().toString();
+        String description = txtDescription.getSelectedItem().toString();
+        switch (description) {
+            case "Veau":
+                code = "VEA-";
+                break;
+            case "Velle":
+                code = "VEL-";
+                break;
+            case "Vache":
+                code = "VAC-";
+                break;
+            case "Genisse":
+                code = "GEN-";
+                break;
+            case "Taureau":
+                code = "TAU-";
+                break;
+        }
+        String etat = txtEtatSante.getSelectedItem().toString();
+
+        if (nom.isEmpty() || prix.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Veuillez renseigner tous les champs");
+        } else if (jDateNaissance.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Veullez donner la date de naissance de la vache");
+        } else if (verifDate(jDateNaissance) == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez choisir une date valide");
+        } else {
+            String dateNa = dchoix.format(jDateNaissance.getDate());
+            int p = Integer.parseInt(prix);
+            int r = service.recupererCodeRace(race);
+            ModelBovin bovin = new ModelBovin(0, r, "default", nom, null, dateNa, etat, geniteur, genitrice, "Vivant", "Pas en vente", p, description);
+            int c = service.insererBovin(bovin);
+
+            if (c > 0) {
+                int idBovin = service.recupererCodeBovin(nom);
+                code = code + "" + idBovin;
+                System.out.println(code);
+                service.updatecodeBovin(idBovin, code);
+                JOptionPane.showMessageDialog(null, "Enregistre avec success!");
+            }
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -123,7 +174,7 @@ public class BovinF extends javax.swing.JPanel {
         txtDescription = new javax.swing.JComboBox<>();
         txtEtatSante = new javax.swing.JComboBox<>();
         txtPrix = new sn.ferme.login.swing.MyTextField();
-        sauvegarder = new sn.ferme.login.swing.ButtonOutLine();
+        ajouterNaissance = new sn.ferme.login.swing.ButtonOutLine();
         race_choix = new javax.swing.JComboBox<>();
         jDateNaissance = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
@@ -152,10 +203,10 @@ public class BovinF extends javax.swing.JPanel {
 
         txtPrix.setText("Prix");
 
-        sauvegarder.setText("Ajouter bovin");
-        sauvegarder.addActionListener(new java.awt.event.ActionListener() {
+        ajouterNaissance.setText("Ajouter naissance");
+        ajouterNaissance.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sauvegarderActionPerformed(evt);
+                ajouterNaissanceActionPerformed(evt);
             }
         });
 
@@ -197,7 +248,7 @@ public class BovinF extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(sauvegarder, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ajouterNaissance, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -220,7 +271,7 @@ public class BovinF extends javax.swing.JPanel {
                         .addComponent(choix_genitrice, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jDateNaissance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(sauvegarder, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ajouterNaissance, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -387,8 +438,13 @@ public class BovinF extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sauvegarderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sauvegarderActionPerformed
-    }//GEN-LAST:event_sauvegarderActionPerformed
+    private void ajouterNaissanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterNaissanceActionPerformed
+        try {
+            ajouterNaissance();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Ce nom existe deja ");
+        }
+    }//GEN-LAST:event_ajouterNaissanceActionPerformed
 
     private void ajouterPoidsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterPoidsActionPerformed
         try {
@@ -417,17 +473,36 @@ public class BovinF extends javax.swing.JPanel {
         } else {
             String id = (String) body[row][0];
             String description = (String) body[row][6];
-        
+
             System.out.println(id);
             showMessage(new ModifierBovin(id, description));// TODO add your handling code here:
         }
     }//GEN-LAST:event_btnModifierActionPerformed
 
     private void btnSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSupprimerActionPerformed
-        // TODO add your handling code here:
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez selectionner une ligne!!!");
+        } else {
+            try {
+                String id = (String) body[row][1];
+                int recuperer = service.recupererCodeBovin(id);
+                int sup = JOptionPane.showConfirmDialog(null,
+                        "Ce bovin est-il Mort ?", "Confirmation",
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+                if (sup == 0) {
+
+                    service.updateBovinEtat(recuperer);
+                    JOptionPane.showMessageDialog(null, "Eta du bovin changé avec success!!");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(BovinF.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnSupprimerActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private sn.ferme.login.swing.ButtonOutLine ajouterNaissance;
     private sn.ferme.login.swing.ButtonOutLine ajouterPoids;
     private javax.swing.JComboBox<String> bovinNonpese;
     private javax.swing.JButton btnDetails;
@@ -446,7 +521,6 @@ public class BovinF extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JComboBox<String> race_choix;
-    private sn.ferme.login.swing.ButtonOutLine sauvegarder;
     private sn.ferme.swing.TableColumn table;
     private javax.swing.JComboBox<String> txtDescription;
     private javax.swing.JComboBox<String> txtEtatSante;

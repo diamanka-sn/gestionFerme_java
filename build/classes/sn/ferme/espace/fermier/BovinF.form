@@ -111,7 +111,7 @@
               </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="sauvegarder" min="-2" pref="151" max="-2" attributes="0"/>
+                  <Component id="ajouterNaissance" min="-2" pref="151" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -140,7 +140,7 @@
                       <Component id="jDateNaissance" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace pref="12" max="32767" attributes="0"/>
-                  <Component id="sauvegarder" min="-2" pref="39" max="-2" attributes="0"/>
+                  <Component id="ajouterNaissance" min="-2" pref="39" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -183,12 +183,12 @@
             <Property name="text" type="java.lang.String" value="Prix"/>
           </Properties>
         </Component>
-        <Component class="sn.ferme.login.swing.ButtonOutLine" name="sauvegarder">
+        <Component class="sn.ferme.login.swing.ButtonOutLine" name="ajouterNaissance">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Ajouter bovin"/>
+            <Property name="text" type="java.lang.String" value="Ajouter naissance"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sauvegarderActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ajouterNaissanceActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="race_choix">

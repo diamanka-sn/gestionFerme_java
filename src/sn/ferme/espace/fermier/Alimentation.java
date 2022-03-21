@@ -1,21 +1,39 @@
 package sn.ferme.espace.fermier;
 
+import com.toedter.calendar.JDateChooser;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import sn.ferme.espace.admin.*;
 import sn.ferme.model.ModelDepense;
+import sn.ferme.model.Utilisateur;
 import sn.ferme.service.ServiceDepense;
 
 public class Alimentation extends javax.swing.JPanel {
 
-    private ServiceDepense service = new ServiceDepense();
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
+    Date dactuelle = new Date();
+    String dA = dchoix.format(dactuelle);
+    String date = null;
+    String dateN = null;
+    String dateA = null;
+    Date dateJour = null, dateChoix = null;
 
-    public Alimentation() {
+    private ServiceDepense service = new ServiceDepense();
+    Utilisateur user;
+
+    public Alimentation(Utilisateur user) {
+        this.user = user;
         initComponents();
         setOpaque(false);
         try {
@@ -24,6 +42,30 @@ public class Alimentation extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(Alimentation.class.getName()).log(Level.SEVERE, null, ex);
         }
+        Lb_quantite.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
+                    e.consume();
+                }
+            }
+        });
+    }
+
+    public int verifDate(JDateChooser j) {
+        date = dchoix.format(j.getDate());
+        int retour = 0;
+        try {
+            dateJour = dchoix.parse(dA);
+            dateChoix = dchoix.parse(date);
+            if (dateChoix.after(dateJour)) {
+                retour = -1;
+            }
+        } catch (ParseException e2) {
+        }
+
+        return retour;
     }
 
     public void dataNiveau() throws SQLException {
@@ -32,8 +74,8 @@ public class Alimentation extends javax.swing.JPanel {
         Object body[][] = new Object[service.niveauStock().size()][3];
         String[] header = {"Nom aliment", "Stock", "Consomes"};
         int i = 0;
-       for (Map.Entry<String, ModelDepense> v : service.niveauStock().entrySet()) {
-           ModelDepense model = v.getValue();
+        for (Map.Entry<String, ModelDepense> v : service.niveauStock().entrySet()) {
+            ModelDepense model = v.getValue();
             body[i][0] = v.getKey();
             body[i][1] = model.getStock() - model.getConsomes();
             body[i][2] = model.getConsomes();
@@ -42,6 +84,42 @@ public class Alimentation extends javax.swing.JPanel {
         }
         table.setModel(new DefaultTableModel(body, header));
 
+    }
+
+    public void ajouterAlimentationduJour() {
+        String qu = Lb_quantite.getText();
+        String Aliment = ComboAlimentation.getSelectedItem().toString();
+        if (qu.isEmpty() || qu.contains("Quantité")) {
+            JOptionPane.showMessageDialog(null, "Veillez donner la quantité a consommée");
+        } else if (datechooser.getDate() == null) {
+            JOptionPane.showMessageDialog(null, "Veuillez choisir une date");
+        } else if (verifDate(datechooser) == -1) {
+            JOptionPane.showMessageDialog(null, "Veuillez choisir une date valide");
+        } else {
+            int quantite = Integer.parseInt(qu);
+            int stock;
+            String dateAlimentation = dchoix.format(datechooser.getDate());
+            try {
+                for (Map.Entry<String, ModelDepense> v : service.niveauStock().entrySet()) {
+                    ModelDepense model = v.getValue();
+                    stock = model.getStock() - model.getConsomes();
+                    if (Aliment.equals(v.getKey()) && quantite <= stock) {
+                        ModelDepense depense = new ModelDepense(0, user.getIdUtilisateur(), Aliment, quantite, dateAlimentation);
+                        int rs = service.insertAliment(depense);
+                        if (rs > 0) {
+                            JOptionPane.showMessageDialog(null, "Alimentation du jour ajouter avec succes");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erreur d(ajout");
+                        }
+                    } else if (Aliment.equals(v.getKey()) && quantite > stock) {
+                        JOptionPane.showMessageDialog(null, "La quantité voulu n'est pas disponible en stock");
+                    }
+
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Alimentation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -53,7 +131,7 @@ public class Alimentation extends javax.swing.JPanel {
         ComboAlimentation = new javax.swing.JComboBox<>();
         datechooser = new com.toedter.calendar.JDateChooser();
         Lb_quantite = new javax.swing.JTextField();
-        btnAjouterTraite = new javax.swing.JButton();
+        btnAjouterAliment = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         table = new sn.ferme.swing.TableColumn();
         jLabel2 = new javax.swing.JLabel();
@@ -65,10 +143,10 @@ public class Alimentation extends javax.swing.JPanel {
 
         Lb_quantite.setText("Quantité");
 
-        btnAjouterTraite.setText("Ajouter alimentation du jour");
-        btnAjouterTraite.addActionListener(new java.awt.event.ActionListener() {
+        btnAjouterAliment.setText("Ajouter alimentation du jour");
+        btnAjouterAliment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAjouterTraiteActionPerformed(evt);
+                btnAjouterAlimentActionPerformed(evt);
             }
         });
 
@@ -79,7 +157,7 @@ public class Alimentation extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnAjouterTraite, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
+                    .addComponent(btnAjouterAliment, javax.swing.GroupLayout.DEFAULT_SIZE, 266, Short.MAX_VALUE)
                     .addComponent(datechooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(Lb_quantite, javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ComboAlimentation, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -95,7 +173,7 @@ public class Alimentation extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(datechooser, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
-                .addComponent(btnAjouterTraite, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addComponent(btnAjouterAliment, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -148,14 +226,14 @@ public class Alimentation extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAjouterTraiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterTraiteActionPerformed
-
-    }//GEN-LAST:event_btnAjouterTraiteActionPerformed
+    private void btnAjouterAlimentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAjouterAlimentActionPerformed
+        ajouterAlimentationduJour();
+    }//GEN-LAST:event_btnAjouterAlimentActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> ComboAlimentation;
     private javax.swing.JTextField Lb_quantite;
-    private javax.swing.JButton btnAjouterTraite;
+    private javax.swing.JButton btnAjouterAliment;
     private com.toedter.calendar.JDateChooser datechooser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

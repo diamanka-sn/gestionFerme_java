@@ -3,7 +3,13 @@ package sn.ferme.espace.client;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
@@ -29,6 +35,7 @@ public class AccueilClient extends javax.swing.JPanel {
         initComponents();
         setOpaque(false);
         init();
+
         //  Animator start form animatePoint to TagetPoint
         animator = PropertySetter.createAnimator(500, mainPanel, "imageLocation", animatePoint, mainPanel.getTargetLocation());
         animator.addTarget(new PropertySetter(mainPanel, "imageSize", new Dimension(180, 120), mainPanel.getTargetSize()));
@@ -49,6 +56,24 @@ public class AccueilClient extends javax.swing.JPanel {
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(home);
         testData();
+
+        int r;
+        try {
+            r = serviceb.nombrePanier(user.getIdUtilisateur(),"en cours");
+            LbelPanier.setText("" + r);
+            ImageIcon ic;
+            if (r > 0) {
+                ic = new ImageIcon(getClass().getResource("/sn/ferme/espace/client/nonvide.png"));
+
+                LCart.setIcon(ic);
+            } else {
+                ic = new ImageIcon(getClass().getResource("/sn/ferme/espace/client/vide.png"));
+
+                LCart.setIcon(ic);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccueilClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void testData() {
@@ -110,6 +135,8 @@ public class AccueilClient extends javax.swing.JPanel {
         background1 = new sn.ferme.espace.client.swing.Background();
         header = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
+        LCart = new javax.swing.JLabel();
+        LbelPanier = new javax.swing.JLabel();
         mainPanel = new sn.ferme.espace.client.swing.MainPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -121,20 +148,37 @@ public class AccueilClient extends javax.swing.JPanel {
         jLabel2.setForeground(new java.awt.Color(0, 102, 0));
         jLabel2.setText("CONSOMEZ A VOTRE RYTHME, 100% NATUREL.");
 
+        LCart.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sn/ferme/espace/client/vide.png"))); // NOI18N
+
+        LbelPanier.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        LbelPanier.setForeground(new java.awt.Color(0, 102, 0));
+
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(88, Short.MAX_VALUE)
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(203, 203, 203))
+                .addGap(77, 77, 77)
+                .addComponent(LCart, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(LbelPanier, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(headerLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(headerLayout.createSequentialGroup()
+                        .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(LbelPanier, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LCart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(14, 14, 14)))
                 .addContainerGap())
         );
 
@@ -208,6 +252,8 @@ public class AccueilClient extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel LCart;
+    private javax.swing.JLabel LbelPanier;
     private sn.ferme.espace.client.swing.Background background1;
     private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;
