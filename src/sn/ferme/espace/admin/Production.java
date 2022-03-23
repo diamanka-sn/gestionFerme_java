@@ -25,20 +25,20 @@ public class Production extends javax.swing.JPanel {
         dataCommander();
     }
     Object body[][] = new Object[service.afficherBovinNonEnLigne().size()][6];
-    Object bodyc[][] = new Object[service.afficherBovinCommander().size()][7];
+    Object bodyc[][] = new Object[service.afficherBovinCommander().size()][6];
 
     public void dataCommander() {
 
-        String[] header = {"Code", "Nom", "Naissance", "prix", "Description", "Race","Client"};
+        String[] header = {"Code", "Nom", "prix", "Description", "Race","Client"};
         int i = 0;
         for (ModelBovin m : new ServiceBovin().afficherBovinCommander()) {
             bodyc[i][0] = m.getCodeBovin();
             bodyc[i][1] = m.getNom();
-            bodyc[i][2] = m.getDateNaissance();
-            bodyc[i][3] = m.getPrix();
-            bodyc[i][4] = m.getDescription();
-            bodyc[i][5] = m.getNomRace();
-            bodyc[i][6] = m.getPrenom() + "-"+m.getTelephone();
+          //  bodyc[i][2] = m.getDateNaissance();
+            bodyc[i][2] = m.getPrix();
+            bodyc[i][3] = m.getDescription();
+            bodyc[i][4] = m.getNomRace();
+            bodyc[i][5] = m.getPrenom() + "-"+m.getTelephone();
             i++;
         }
         tableCommander.setModel(new DefaultTableModel(bodyc, header));

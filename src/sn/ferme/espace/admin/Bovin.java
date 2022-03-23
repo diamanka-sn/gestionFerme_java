@@ -320,7 +320,7 @@ public class Bovin extends javax.swing.JPanel {
         jLabel5.setForeground(new java.awt.Color(102, 102, 102));
         jLabel5.setText("Date achat bovin");
 
-        comPeriode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Lactation", "Tarrissement" }));
+        comPeriode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "lactation", "tarrissement" }));
 
         comPhase.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "gestant", "non gestant" }));
 

@@ -1,5 +1,6 @@
 package sn.ferme.espace.admin;
 
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.SQLException;
@@ -7,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
@@ -15,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import sn.ferme.model.ModelCard;
 import sn.ferme.model.ModelDepense;
+import sn.ferme.model.ModelDiagramme;
 import sn.ferme.model.Utilisateur;
 import sn.ferme.service.ServiceBovin;
 import sn.ferme.service.ServiceDepense;
@@ -40,11 +43,34 @@ public class Finance extends javax.swing.JPanel {
 
     public Finance(Utilisateur user) {
         this.user = user;
+        List<ModelDiagramme> listP = new ArrayList<>();
+
+        Color[] couleurs;
+        couleurs = new Color[20];
+        couleurs[0] = new Color(4, 174, 243);
+        couleurs[1] = new Color(215, 39, 250);
+        couleurs[2] = new Color(238, 167, 35);
+        couleurs[3] = new Color(127, 63, 255);
+        couleurs[4] = new Color(245, 79, 99);
+        couleurs[5] = new Color(165, 38, 10);
+        couleurs[6] = new Color(245, 79, 99);
+        couleurs[7] = new Color(244, 102, 27);
+        couleurs[8] = new Color(237, 127, 16);
+        couleurs[9] = new Color(0, 0, 0);
+        couleurs[10] = new Color(255, 255, 0);
+
         try {
             initComponents();
             data();
+            int i = 0;
+            for (ModelDepense m : serviced.depenseParType()) {
+                listP.add(new ModelDiagramme(m.getNomType(), m.getMontant(), couleurs[i]));
+                i++;
+            }
+            chartDiagramme1.setModel(listP);
             comboType.setModel(new DefaultComboBoxModel(serviced.listProfession().toArray()));
             lbMontant.addKeyListener(new KeyAdapter() {
+                @Override
                 public void keyTyped(KeyEvent e) {
                     char c = e.getKeyChar();
                     if (((c < '0') || (c > '9')) && c != KeyEvent.VK_BACK_SPACE) {
@@ -68,7 +94,7 @@ public class Finance extends javax.swing.JPanel {
         }
     }
 
-    public void data() {
+    private void data() {
         try {
             nb = serviced.ligne();
         } catch (SQLException ex) {
@@ -201,6 +227,7 @@ public class Finance extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         cardAchatBovin = new sn.ferme.component.Card();
         cardMasseSalariale = new sn.ferme.component.Card();
+        chartDiagramme1 = new sn.ferme.chart.ChartDiagramme();
 
         cardCA.setColorGradient(new java.awt.Color(0, 0, 102));
 
@@ -379,7 +406,9 @@ public class Finance extends javax.swing.JPanel {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(cardAchatBovin, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cardMasseSalariale, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(cardMasseSalariale, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(chartDiagramme1, javax.swing.GroupLayout.PREFERRED_SIZE, 485, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -411,9 +440,10 @@ public class Finance extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cardAchatBovin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardMasseSalariale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cardAchatBovin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cardMasseSalariale, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chartDiagramme1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap(162, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -444,6 +474,7 @@ public class Finance extends javax.swing.JPanel {
     private sn.ferme.component.Card cardCommande;
     private sn.ferme.component.Card cardDepenseMensuelle;
     private sn.ferme.component.Card cardMasseSalariale;
+    private sn.ferme.chart.ChartDiagramme chartDiagramme1;
     private javax.swing.JComboBox<String> comboType;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel2;

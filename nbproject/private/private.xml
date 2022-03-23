@@ -4,32 +4,18 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/ProductionF.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Employe.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/AccueilF.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/connexionDb/DatabaseConnection.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Bovin.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/Alimentation.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/Fermier.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Finance.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/service/ValiderChamp.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/client/FormHome.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/main/Main.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/client/PanierClient.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Accueil.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/client/AcheterLait.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/service/ServiceDepense.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/Sante.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Production.java</file>
+            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/login/composant/PanelLoginAndRegister.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/DetailBovin.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/espace_achat.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/service/ServiceBovin.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/Client.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/service/ServiceUser.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/model/ModelBovin.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/AccueilF.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/ModifierInfos.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/Passe.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/model/ModelCard.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Finance.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/Admin.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/model/Utilisateur.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/fermier/BovinF.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/admin/Production.java</file>
-            <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/espace/client/AccueilClient.java</file>
             <file>file:/C:/Users/hp/laboratoire/ferme-vaches/src/sn/ferme/service/ServiceTraite.java</file>
         </group>
     </open-files>

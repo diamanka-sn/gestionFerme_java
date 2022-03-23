@@ -23,7 +23,7 @@ public class Sante extends javax.swing.JPanel {
 
     private ServiceBovin service = new ServiceBovin();
     private ServiceDiagnostic serviceD = new ServiceDiagnostic();
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     Date dactuelle = new Date();
     String dA = dchoix.format(dactuelle);
     String date = null;

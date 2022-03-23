@@ -26,7 +26,7 @@ public class ProductionF extends javax.swing.JPanel {
 
     private ServiceTraite serviceT = new ServiceTraite();
     private ServiceBovin serviceB = new ServiceBovin();
-    SimpleDateFormat dchoix = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat dchoix = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat dateTraite = new SimpleDateFormat("yyyy-MM-dd");
 
     Date dactuelle = new Date();

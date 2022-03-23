@@ -134,7 +134,7 @@ public class ServiceDepense {
     }
 
     public ArrayList<ModelDepense> depenseParType() throws SQLException {
-        String select = "SELECT `nomType`,SUM(`montant`) AS montant FROM `depenses`,`type` WHERE `depenses`.`idType`=`type`.`idType` ";
+        String select = "SELECT `nomType`,SUM(`montant`) AS montant FROM `depenses`,`type` WHERE `depenses`.`idType`=`type`.`idType` group BY nomType";
 
         try {
             PreparedStatement ps = con.prepareStatement(select);
@@ -143,7 +143,7 @@ public class ServiceDepense {
                 ModelDepense depense = new ModelDepense();
                 depense.setNomType(rs.getString("nomType"));
                 depense.setMontant(rs.getInt("montant"));
-                listeDepense.add(depense);
+                listeDepenseType.add(depense);
             }
         } catch (SQLException e) {
 

@@ -20,11 +20,13 @@ public class DatabaseConnection {
     }
 
     public void connectToDatabase() throws SQLException {
-        String server = "localhost";
+         String server = "localhost"; 
+       // String server = "192.168.43.186";
+
         String db = "ferme";
         String nomUser = "root";
         String password = "";
-        connection = java.sql.DriverManager.getConnection("jdbc:mysql://" + server +  "/" + db, nomUser, password);
+        connection = java.sql.DriverManager.getConnection("jdbc:mysql://" + server + "/" + db, nomUser, password);
     }
 
     public Connection getConnection() {

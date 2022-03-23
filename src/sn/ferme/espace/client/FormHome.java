@@ -105,7 +105,7 @@ public class FormHome extends javax.swing.JPanel {
 
         lbItemName.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         lbItemName.setForeground(new java.awt.Color(76, 76, 76));
-        lbItemName.setText("Nom ovin");
+        lbItemName.setText("Nom bovin");
 
         lbPrice.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         lbPrice.setForeground(new java.awt.Color(76, 76, 76));
